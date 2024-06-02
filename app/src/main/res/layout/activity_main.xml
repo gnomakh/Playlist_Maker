@@ -1,75 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1B22"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/blue"
     android:orientation="vertical"
-    android:padding="20dp">
+    tools:ignore="ExtraText">
 
     <FrameLayout
+        android:layout_height="56dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:paddingStart="@dimen/horizontal_padding">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:text="Вопрос:"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:text="2/10"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-    </FrameLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:scaleType="centerCrop"
-        android:src="@drawable/poster" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="63dp"
-        android:layout_marginTop="33dp"
-        android:gravity="center"
-        android:text="Рейтинг этого фильма больше чем 9?"
-        android:textColor="#ffffff"
-        android:textSize="23sp"
-        android:textStyle="bold"/>
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/main_text_size" />
+    </FrameLayout>>
 
     <LinearLayout
+        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
-        android:orientation="horizontal">
+        android:paddingStart="@dimen/horizontal_padding"
+        android:paddingEnd="@dimen/horizontal_padding"
+        android:paddingTop="24dp"
+        android:paddingBottom="28dp">
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/button_margin"
             android:layout_weight="1"
-            android:backgroundTint="#ffffff"
-            android:text="Нет"
-            android:textColor="#1A1B22" />
+            app:cornerRadius = "16dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/search"
+            android:textSize="@dimen/main_text_size"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:icon="@drawable/button_search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"/>
 
         <Button
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/button_margin"
             android:layout_weight="1"
-            android:backgroundTint="#ffffff"
-            android:text="Да"
-            android:textColor="#1A1B22" />
+            app:cornerRadius = "16dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/media"
+            android:textSize="@dimen/main_text_size"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:icon="@drawable/button_media"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:cornerRadius = "16dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/settings"
+            android:textSize="@dimen/main_text_size"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:icon="@drawable/button_settings"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/icon_padding"
+            app:iconTint="@color/black"/>
+
     </LinearLayout>
 
 
