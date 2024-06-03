@@ -11,7 +11,7 @@
     <FrameLayout
         android:layout_height="56dp"
         android:layout_width="match_parent"
-        android:paddingStart="@dimen/horizontal_padding">
+        android:paddingStart="@dimen/padding">
 
         <TextView
             android:layout_width="match_parent"
@@ -26,17 +26,18 @@
         android:orientation="vertical"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:paddingStart="@dimen/horizontal_padding"
-        android:paddingEnd="@dimen/horizontal_padding"
+        android:paddingStart="@dimen/padding"
+        android:paddingEnd="@dimen/padding"
         android:paddingTop="24dp"
         android:paddingBottom="28dp">
 
         <Button
+            android:id="@+id/search_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/button_margin"
             android:layout_weight="1"
-            app:cornerRadius = "16dp"
+            app:cornerRadius = "@dimen/radius"
             android:backgroundTint="@color/white"
             android:text="@string/search"
             android:textSize="@dimen/main_text_size"
@@ -48,11 +49,12 @@
             app:iconTint="@color/black"/>
 
         <Button
+            android:id="@+id/media_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="@dimen/button_margin"
             android:layout_weight="1"
-            app:cornerRadius = "16dp"
+            app:cornerRadius = "@dimen/radius"
             android:backgroundTint="@color/white"
             android:text="@string/media"
             android:textSize="@dimen/main_text_size"
@@ -64,10 +66,11 @@
             app:iconTint="@color/black"/>
 
         <Button
+            android:id="@+id/settings_button"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            app:cornerRadius = "16dp"
+            app:cornerRadius = "@dimen/radius"
             android:backgroundTint="@color/white"
             android:text="@string/settings"
             android:textSize="@dimen/main_text_size"
