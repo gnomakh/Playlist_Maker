@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="14dp"
             android:text="@string/media"
-            android:textColor="@color/black"
+            android:textColor="@color/blackish"
             android:textSize="@dimen/main_text_size" />
 
     </LinearLayout>

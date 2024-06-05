@@ -40,11 +40,11 @@
             android:text="@string/search"
             android:textSize="@dimen/main_text_size"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/blackish"
             app:icon="@drawable/button_search"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/black"/>
+            app:iconTint="@color/blackish"/>
 
         <Button
             android:id="@+id/media_button"
@@ -57,11 +57,11 @@
             android:text="@string/media"
             android:textSize="@dimen/main_text_size"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/blackish"
             app:icon="@drawable/button_media"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/black"/>
+            app:iconTint="@color/blackish"/>
 
         <Button
             android:id="@+id/settings_button"
@@ -73,11 +73,11 @@
             android:text="@string/settings"
             android:textSize="@dimen/main_text_size"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/blackish"
             app:icon="@drawable/button_settings"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/icon_padding"
-            app:iconTint="@color/black"/>
+            app:iconTint="@color/blackish"/>
 
     </LinearLayout>
 
