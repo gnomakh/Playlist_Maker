@@ -3,21 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
     tools:ignore="ExtraText">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.Toolbar
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:orientation="horizontal">
+        android:layout_width="match_parent"
+        app:contentInsetStart="0dp">
 
         <ImageView
             android:id = "@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
             android:paddingEnd="24dp"
             android:paddingStart="@dimen/padding_16"
             android:paddingVertical="@dimen/padding_16"
@@ -31,7 +30,6 @@
             android:textColor="@color/blackish"
             android:textSize="@dimen/main_text_size" />
 
-    </LinearLayout>
-
+    </androidx.appcompat.widget.Toolbar>
 
 </LinearLayout>

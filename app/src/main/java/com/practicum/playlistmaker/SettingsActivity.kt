@@ -18,8 +18,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         backButton.setOnClickListener{
-            val backIntent = Intent(this, MainActivity::class.java)
-            startActivity(backIntent)
+            finish()
         }
 
     }
