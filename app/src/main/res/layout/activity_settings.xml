@@ -3,34 +3,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/backgroundColor"
     android:orientation="vertical"
     tools:ignore="ExtraText">
 
-    <androidx.appcompat.widget.Toolbar
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        app:contentInsetStart="0dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal">
 
-        <ImageView
+        <ImageView style="@style/BackArrow"
             android:id = "@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="24dp"
-            android:paddingStart="@dimen/padding_16"
-            android:paddingVertical="@dimen/padding_16"
-            android:src="@drawable/arrow_back" />
+            android:src="@drawable/arrow_back"/>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
-            android:text="@string/settings"
-            android:textColor="@color/blackish"
-            android:textSize="@dimen/main_text_size" />
+        <TextView style="@style/HeadingTextStyle"
+            android:text="@string/settings"/>
 
-    </androidx.appcompat.widget.Toolbar>
+    </LinearLayout>
 
     <Switch
         android:id="@+id/switch1"
@@ -39,74 +29,46 @@
         android:paddingHorizontal="@dimen/padding_16"
         android:paddingVertical="@dimen/vertical_padding"
         android:text="@string/night_mode"
-        android:textColor="@color/black"
+        android:textColor="@color/colorOnPrimary"
         android:textSize="@dimen/settings_text_size"
         tools:ignore="UseSwitchCompatOrMaterialXml"/>
 
-    <LinearLayout
+    <LinearLayout android:id = "@+id/share_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/vertical_padding"
         android:paddingHorizontal="@dimen/padding_16">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:text="@string/share"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+        <TextView style="@style/SettingsTextStyle"
+            android:text="@string/share"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+        <ImageView style="@style/SettingsIconStyle"
             android:src="@drawable/share" />
-
     </LinearLayout>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/support_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/vertical_padding"
         android:paddingHorizontal="@dimen/padding_16">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:text="@string/support"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+        <TextView style="@style/SettingsTextStyle"
+            android:text="@string/support"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+        <ImageView style="@style/SettingsIconStyle"
             android:src="@drawable/support" />
     </LinearLayout>
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/agreement_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="@dimen/vertical_padding"
         android:paddingHorizontal="@dimen/padding_16">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_weight="1"
-            android:text="@string/agreement"
-            android:textColor="@color/black"
-            android:textSize="@dimen/settings_text_size" />
+        <TextView style="@style/SettingsTextStyle"
+            android:text="@string/agreement"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
+        <ImageView style="@style/SettingsIconStyle"
             android:src="@drawable/arrow_forward" />
     </LinearLayout>
 
