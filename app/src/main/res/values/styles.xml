@@ -26,6 +26,9 @@
         <item name = "android:paddingVertical">@dimen/padding_16</item>
         <item name = "android:tint">@color/colorOnPrimary</item>
     </style>
+    <style name = "SwitchStyle">
+        <item name="colorControlActivated">#AEAFB4</item>
+    </style>
     <style name = "SettingsTextStyle">
         <item name = "android:layout_width">0dp</item>
         <item name = "android:layout_height">wrap_content</item>

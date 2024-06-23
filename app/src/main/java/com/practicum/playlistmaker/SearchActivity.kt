@@ -13,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 
 class SearchActivity : AppCompatActivity() {
+    var editTextState: CharSequence? = DEFAULT_STATE
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,13 +44,31 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     clearButton.visibility = View.VISIBLE
                 }
+
             }
 
             override fun afterTextChanged(s: Editable?) {
                 //заглушка
+                editTextState = s
             }
         }
 
         inputEditText.addTextChangedListener(simpleTextWatcher)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCH_STATE, editTextState.toString())
+    }
+
+    companion object {
+        const val SEARCH_STATE = "SEARCH_STATE"
+        const val DEFAULT_STATE = ""
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        editTextState = savedInstanceState.getString(SEARCH_STATE, DEFAULT_STATE)
+        findViewById<EditText>(R.id.inputSearch).setText(editTextState)
     }
 }

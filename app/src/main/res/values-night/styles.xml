@@ -36,6 +36,9 @@
         <item name = "android:textFontWeight">500</item>
         <item name = "android:letterSpacing">0</item>
     </style>
+    <style name = "SwitchStyle">
+        <item name="colorControlActivated">#3772E7</item>
+    </style>
     <style name = "SettingsIconStyle">
         <item name = "android:layout_width">wrap_content</item>
         <item name = "android:layout_height">wrap_content</item>
