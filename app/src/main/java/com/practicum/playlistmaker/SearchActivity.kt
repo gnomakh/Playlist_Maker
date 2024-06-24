@@ -16,7 +16,6 @@ class SearchActivity : AppCompatActivity() {
     var editTextState: CharSequence? = DEFAULT_STATE
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_search)
 
         val backButton = findViewById<ImageView>(R.id.back_button)

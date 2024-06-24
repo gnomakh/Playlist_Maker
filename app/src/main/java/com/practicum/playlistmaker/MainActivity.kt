@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId") // Потом уберу
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
         val searchButton = findViewById<Button>(R.id.search_button)
