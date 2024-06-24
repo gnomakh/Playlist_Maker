@@ -23,14 +23,16 @@
     </LinearLayout>
 
     <Switch android:theme= "@style/SwitchStyle"
-        android:id="@+id/switch1"
+        android:id="@+id/theme_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/padding_16"
         android:paddingVertical="@dimen/vertical_padding"
         android:text="@string/night_mode"
-        android:textColor="@color/colorOnPrimary"
+        android:textColor="@color/secondaryTextColor"
         android:textSize="@dimen/settings_text_size"
+        android:textFontWeight="500"
+        android:fontFamily="@font/ys_display_regular"
         tools:ignore="UseSwitchCompatOrMaterialXml"/>
 
     <LinearLayout android:id = "@+id/share_button"

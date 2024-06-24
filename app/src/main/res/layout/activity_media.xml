@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/backgroundColor"
     android:orientation="vertical"
     tools:ignore="ExtraText">
 
@@ -13,7 +13,7 @@
         android:layout_marginBottom="24dp"
         android:orientation="horizontal">
 
-        <ImageView
+        <ImageView style="@style/BackArrow"
             android:id = "@+id/back_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,12 +23,12 @@
             android:paddingVertical="@dimen/padding_16"
             android:src="@drawable/arrow_back" />
 
-        <TextView
+        <TextView style="@style/HeadingTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="14dp"
             android:text="@string/media"
-            android:textColor="@color/colorOnSecondary"
+            android:textColor="@color/headingTextColor"
             android:textSize="@dimen/main_text_size" />
 
     </LinearLayout>
