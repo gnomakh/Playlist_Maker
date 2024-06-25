@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/backgroundColor"
     android:orientation="vertical"
     tools:ignore="ExtraText">
@@ -14,47 +14,47 @@
         android:layout_marginBottom="24dp"
         android:orientation="horizontal">
 
-        <ImageView style="@style/BackArrow"
-            android:id = "@+id/back_button"
+        <ImageView
+            android:id="@+id/back_button"
+            style="@style/BackArrow"
             android:src="@drawable/arrow_back" />
 
-        <TextView style ="@style/HeadingTextStyle"
-            android:text="@string/search"/>
+        <TextView
+            style="@style/HeadingTextStyle"
+            android:text="@string/search" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@drawable/search_shape"
         android:layout_marginHorizontal="16dp"
+        android:background="@drawable/search_shape"
+        android:orientation="horizontal"
         android:paddingHorizontal="16dp">
 
-        <EditText android:id="@+id/inputSearch"
-            android:layout_height="wrap_content"
+        <EditText
+            style="@style/EditTextStyle"
+            android:id="@+id/inputSearch"
             android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:paddingVertical="8dp"
-            android:fontFamily="@font/ys_display_regular"
-            android:backgroundTint="@color/transparent"
             android:drawableStart="@drawable/search"
-            android:drawableTint="@color/searchContentColor"
             android:drawablePadding="4dp"
             android:hint="@string/search_hint"
-            android:textColorHint="@color/searchContentColor"
-            android:textColor="@color/staticTextColor"
-            android:textFontWeight="500"
-            app:cornerRadius="16dp"
+            android:inputType="text"
             android:maxLines="1"
-            android:inputType="text"/>
+            android:paddingVertical="8dp"
 
-        <ImageView android:id="@+id/clearButton"
-            android:layout_height="wrap_content"
+            app:cornerRadius="16dp" />
+
+        <ImageView
+            android:id="@+id/clearButton"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/cross"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 

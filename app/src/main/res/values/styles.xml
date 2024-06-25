@@ -1,60 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name = "MainMenuButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name = "android:layout_width">match_parent</item>
-        <item name = "android:layout_height">0dp</item>
-        <item name = "android:layout_weight">1</item>
-        <item name = "cornerRadius">16dp</item>
-        <item name = "android:backgroundTint">@color/mainMenuButtonColor</item>
-        <item name = "android:textSize">@dimen/main_text_size</item>
-        <item name = "android:textAllCaps">false</item>
-        <item name = "android:textColor">@color/staticTextColor</item>
-        <item name = "iconGravity">textStart</item>
-        <item name = "android:fontFamily">@font/ys_display_medium</item>
-        <item name = "android:textFontWeight">500</item>
-        <item name = "android:letterSpacing">0</item>
-        <item name = "iconPadding">@dimen/icon_padding</item>
-        <item name = "iconTint">@color/staticTextColor</item>
-        <item name = "android:elevation">0dp</item>>
+
+    <style name="MainMenuButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="android:backgroundTint">@color/mainMenuButtonColor</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/staticTextColor</item>
+        <item name="iconGravity">textStart</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="iconPadding">@dimen/icon_padding</item>
+        <item name="iconTint">@color/staticTextColor</item>
+        <item name="android:elevation">0dp</item>>
     </style>
-    <style name = "BackArrow">
-        <item name = "android:layout_width">wrap_content</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_gravity">center_vertical</item>
-        <item name = "android:paddingEnd">24dp</item>
-        <item name = "android:paddingStart">@dimen/padding_16</item>
-        <item name = "android:paddingVertical">@dimen/padding_16</item>
-        <item name = "android:tint">@color/headingTextColor</item>
+
+    <style name="BackArrow">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:paddingStart">@dimen/padding_16</item>
+        <item name="android:paddingVertical">@dimen/padding_16</item>
+        <item name="android:tint">@color/headingTextColor</item>
     </style>
-    <style name = "SwitchStyle">
+
+    <style name="SwitchStyle">
         <item name="colorControlActivated">#3772E7</item>
     </style>
-    <style name = "SettingsTextStyle">
-        <item name = "android:layout_width">0dp</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_gravity">start</item>
-        <item name = "android:layout_weight">1</item>
-        <item name = "android:textColor">@color/secondaryTextColor</item>
-        <item name = "android:textSize">@dimen/settings_text_size</item>
-        <item name = "android:fontFamily">@font/ys_display_regular</item>
-        <item name = "android:textFontWeight">500</item>>
-        <item name = "android:letterSpacing">0</item>
+
+    <style name="SettingsTextStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/secondaryTextColor</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">500</item>>
+        <item name="android:letterSpacing">0</item>
     </style>
-    <style name = "SettingsIconStyle">
-        <item name = "android:layout_width">wrap_content</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:layout_gravity">end</item>
-        <item name = "tint">@color/iconColor</item>
+
+    <style name="SettingsIconStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="tint">@color/iconColor</item>
     </style>
-    <style name = "HeadingTextStyle">
-        <item name = "android:layout_width">match_parent</item>
-        <item name = "android:layout_height">wrap_content</item>
-        <item name = "android:paddingVertical">14dp</item>
-        <item name = "android:textColor">@color/headingTextColor</item>
-        <item name = "android:textSize">@dimen/main_text_size</item>
-        <item name = "android:fontFamily">@font/ys_display_medium</item>
-        <item name = "android:textFontWeight">500</item>
-        <item name = "android:letterSpacing">0</item>
+
+    <style name="HeadingTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingVertical">14dp</item>
+        <item name="android:textColor">@color/headingTextColor</item>
+        <item name="android:textSize">@dimen/main_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
+    <style name="EditTextStyle">
+        <item name="android:backgroundTint">@color/transparent</item>
+        <item name="android:drawableTint">@color/searchContentColor</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/staticTextColor</item>
+        <item name="android:textColorHint">@color/searchContentColor</item>
+        <item name="android:fontWeight">500</item>
     </style>
 
 </resources>

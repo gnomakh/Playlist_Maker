@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 
 class SearchActivity : AppCompatActivity() {
     var editTextState: CharSequence? = DEFAULT_STATE
@@ -32,27 +33,13 @@ class SearchActivity : AppCompatActivity() {
             imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         }
 
-        val simpleTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //заглушка
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s.isNullOrEmpty()) {
-                    clearButton.visibility = View.GONE
-                } else {
-                    clearButton.visibility = View.VISIBLE
-                }
-
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                //заглушка
-                editTextState = s
+        inputEditText.doOnTextChanged { text, start, before, count ->
+            if (text.isNullOrEmpty()) {
+                clearButton.visibility = View.GONE
+            } else {
+                clearButton.visibility = View.VISIBLE
             }
         }
-
-        inputEditText.addTextChangedListener(simpleTextWatcher)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
