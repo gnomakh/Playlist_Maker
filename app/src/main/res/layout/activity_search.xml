@@ -25,38 +25,34 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:background="@drawable/search_shape"
-        android:orientation="horizontal"
         android:paddingHorizontal="16dp">
 
         <EditText
-            style="@style/EditTextStyle"
             android:id="@+id/inputSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:drawableStart="@drawable/search"
             android:drawablePadding="4dp"
-            android:hint="@string/search_hint"
+            android:hint="@string/search"
             android:inputType="text"
             android:maxLines="1"
             android:paddingVertical="8dp"
-
             app:cornerRadius="16dp" />
 
         <ImageView
             android:id="@+id/clearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="end|center"
             android:src="@drawable/cross"
             android:visibility="gone" />
 
-    </LinearLayout>
-
+    </FrameLayout>
 
 </LinearLayout>
