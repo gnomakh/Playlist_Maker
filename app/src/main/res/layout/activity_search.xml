@@ -1,35 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/backgroundColor"
     android:orientation="vertical"
     tools:ignore="ExtraText">
 
-    <androidx.appcompat.widget.Toolbar
-        android:layout_height="wrap_content"
+    <LinearLayout
         android:layout_width="match_parent"
-        app:contentInsetStart="0dp">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal">
 
         <ImageView
-            android:id = "@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="24dp"
-            android:paddingStart="@dimen/padding_16"
-            android:paddingVertical="@dimen/padding_16"
+            android:id="@+id/back_button"
+            style="@style/BackArrow"
             android:src="@drawable/arrow_back" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingVertical="14dp"
-            android:text="@string/search"
-            android:textColor="@color/blackish"
-            android:textSize="@dimen/main_text_size" />
+            style="@style/HeadingTextStyle"
+            android:text="@string/search" />
 
-    </androidx.appcompat.widget.Toolbar>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/search_shape"
+        android:paddingHorizontal="16dp">
+
+        <EditText
+            android:id="@+id/inputSearch"
+            style="@style/EditTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="4dp"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingVertical="8dp"
+            app:cornerRadius="16dp" />
+
+        <ImageView
+            android:id="@+id/clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            android:src="@drawable/cross"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mainMenuBackground">#3772E7</color>
+    <color name="mainMenuBackground">#1A1B22</color>
     <color name="mainHeadingTextColor">#FFFFFFFF</color>
     <color name="mainMenuButtonColor">#FFFFFFFF</color>
 
-    <color name="backgroundColor">#FFFFFFFF</color>
-    <color name="headingTextColor">#1A1B22</color>
-    <color name="secondaryTextColor">#000000</color>
+    <color name="headingTextColor">#FFFFFFFF</color>
+    <color name="secondaryTextColor">#FFFFFFFF</color>
+    <color name="backgroundColor">#1A1B22</color>
     <color name="iconColor">#AEAFB4</color>
 
     <color name="staticTextColor">#1A1B22</color>
     <color name="transparent">#00000000</color>
-    <color name="editTextColor">#E6E8EB</color>
-    <color name="searchContentColor">#AEAFB4</color>
+    <color name="editTextColor">#FFFFFFFF</color>
+    <color name="searchContentColor">#1A1B22</color>
 </resources>
