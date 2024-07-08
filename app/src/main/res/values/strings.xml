@@ -15,4 +15,6 @@
     <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
 
+    <string name="text_placeholder">Заглушка</string>
+
 </resources>
