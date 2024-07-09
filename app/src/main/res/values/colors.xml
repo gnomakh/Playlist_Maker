@@ -13,4 +13,7 @@
     <color name="transparent">#00000000</color>
     <color name="editTextColor">#E6E8EB</color>
     <color name="searchContentColor">#AEAFB4</color>
+
+    <color name="trackNameColor">#000000</color>
+    <color name="artist_name_color">#AEAFB4</color>
 </resources>

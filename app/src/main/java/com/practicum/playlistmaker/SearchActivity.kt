@@ -1,20 +1,19 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class SearchActivity : AppCompatActivity() {
     var editTextState: CharSequence? = DEFAULT_STATE
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -40,6 +39,10 @@ class SearchActivity : AppCompatActivity() {
                 clearButton.visibility = View.VISIBLE
             }
         }
+
+        val rvTracks = findViewById<RecyclerView>(R.id.rvTracks)
+        rvTracks.layoutManager = LinearLayoutManager(this)
+        rvTracks.adapter = TracksAdapter()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

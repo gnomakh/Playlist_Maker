@@ -7,10 +7,13 @@
     <color name="headingTextColor">#FFFFFFFF</color>
     <color name="secondaryTextColor">#FFFFFFFF</color>
     <color name="backgroundColor">#1A1B22</color>
-    <color name="iconColor">#AEAFB4</color>
+    <color name="iconColor">#FFFFFF</color>
 
     <color name="staticTextColor">#1A1B22</color>
     <color name="transparent">#00000000</color>
     <color name="editTextColor">#FFFFFFFF</color>
     <color name="searchContentColor">#1A1B22</color>
+
+    <color name="trackNameColor">#FFFFFF</color>
+    <color name="artist_name_color">#FFFFFF</color>
 </resources>
