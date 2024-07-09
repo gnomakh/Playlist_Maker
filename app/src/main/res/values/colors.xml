@@ -15,5 +15,5 @@
     <color name="searchContentColor">#AEAFB4</color>
 
     <color name="trackNameColor">#000000</color>
-    <color name="ArtistNameColor">#AEAFB4</color>
+    <color name="artist_name_color">#AEAFB4</color>
 </resources>

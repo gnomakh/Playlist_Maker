@@ -82,7 +82,7 @@
     <style name="ArtistNameStyle">
         <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
-        <item name="android:textColor">@color/ArtistNameColor</item>
+        <item name="android:textColor">@color/artist_name_color</item>
         <item name="android:fontWeight">400</item>
     </style>
 
