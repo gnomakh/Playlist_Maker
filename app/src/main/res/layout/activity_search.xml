@@ -36,13 +36,15 @@
             android:id="@+id/inputSearch"
             style="@style/EditTextStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:drawableStart="@drawable/search"
             android:drawablePadding="4dp"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
             android:paddingVertical="8dp"
+            android:singleLine="true"
             app:cornerRadius="16dp" />
 
         <ImageView
