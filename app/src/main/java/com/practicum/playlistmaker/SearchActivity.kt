@@ -1,9 +1,7 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.renderscript.ScriptGroup.Binding
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,28 +14,16 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.network.ITunesAPI
-import com.practicum.playlistmaker.network.SearchResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.practicum.playlistmaker.network.*
 
 class SearchActivity : AppCompatActivity() {
     var editTextState: CharSequence? = DEFAULT_STATE
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val tracksBaseUrl = "https://itunes.apple.com"
-
-    private val retrofit =
-        Retrofit.Builder()
-            .baseUrl(tracksBaseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-    private val trackService = retrofit.create(ITunesAPI::class.java)
 
     private lateinit var backButton: ImageView
     private lateinit var updateButton: Button
@@ -88,18 +74,17 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 lastSearchQueue = binding.inputSearch.text.toString()
-                queue(binding, adapter, trackService, tracks, lastSearchQueue)
+                queue(adapter, trackService, tracks, lastSearchQueue)
             }
             false
         }
 
         binding.updateButton.setOnClickListener {
-            queue(binding, adapter, trackService, tracks, lastSearchQueue)
+            queue(adapter, trackService, tracks, lastSearchQueue)
         }
     }
 
     fun queue(
-        binding: ActivitySearchBinding,
         adapter: TracksAdapter,
         trackService: ITunesAPI,
         tracks: ArrayList<Track>,

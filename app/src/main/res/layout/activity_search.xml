@@ -45,7 +45,8 @@
             android:maxLines="1"
             android:paddingVertical="8dp"
             android:singleLine="true"
-            app:cornerRadius="16dp" />
+            app:cornerRadius="16dp"
+            android:textCursorDrawable="@drawable/search_cursor"/>
 
         <ImageView
             android:id="@+id/clearButton"
