@@ -36,14 +36,17 @@
             android:id="@+id/inputSearch"
             style="@style/EditTextStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:drawableStart="@drawable/search"
             android:drawablePadding="4dp"
             android:hint="@string/search"
+            android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
             android:paddingVertical="8dp"
-            app:cornerRadius="16dp" />
+            android:singleLine="true"
+            app:cornerRadius="16dp"
+            android:textCursorDrawable="@drawable/search_cursor"/>
 
         <ImageView
             android:id="@+id/clearButton"
@@ -58,7 +61,83 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTracks"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp" />
+
+
+    <LinearLayout
+        android:id="@+id/search_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="102dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/nothing_found_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/search_placeholder" />
+
+        <TextView
+            style="@style/SearchPlaceholderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/nothing_found"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/network_error_palceholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="102dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/network_error_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/network_error" />
+
+        <TextView
+            style="@style/SearchPlaceholderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/network_error"
+            android:textAlignment="center" />
+
+        <TextView
+            style="@style/SearchPlaceholderStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:text="@string/check_connection"
+            android:textAlignment="center" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/update_button"
+            style="@style/RoundedButtonStyle"
+            android:layout_width="92dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/update" />
+
+    </LinearLayout>
+
 
 </LinearLayout>

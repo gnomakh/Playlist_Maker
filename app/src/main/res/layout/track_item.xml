@@ -32,7 +32,8 @@
             android:maxLines="1"
             android:text="@string/text_placeholder" />
 
-        <LinearLayout
+        <!-- использую constraint layout, потому что в linear съезжает разделительная точка -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -41,20 +42,28 @@
             <TextView
                 android:id="@+id/artist_name"
                 style="@style/ArtistNameStyle"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@string/text_placeholder" />
+                android:text="@string/text_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="3dp"
                 android:layout_height="3dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:src="@drawable/dot_divider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/track_duration"
+                app:layout_constraintStart_toEndOf="@+id/artist_name"
+                app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/artist_name_color" />
 
             <TextView
@@ -63,10 +72,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="@string/text_placeholder" />
+                android:text="@string/text_placeholder"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     </LinearLayout>
