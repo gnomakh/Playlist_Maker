@@ -20,10 +20,10 @@ import retrofit2.Response
 import com.practicum.playlistmaker.network.*
 
 class SearchActivity : AppCompatActivity() {
-    var editTextState: CharSequence? = DEFAULT_STATE
+    private var editTextState: CharSequence? = DEFAULT_STATE
+    private var tracksState: ArrayList<Track> = DEFAULT_TRACKS_STATE
 
     private lateinit var binding: ActivitySearchBinding
-
 
     private lateinit var backButton: ImageView
     private lateinit var updateButton: Button
@@ -133,16 +133,20 @@ class SearchActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(SEARCH_STATE, editTextState.toString())
+        outState.putSerializable(SEARCH_STATE, tracksState)
     }
 
     companion object {
         const val SEARCH_STATE = "SEARCH_STATE"
         const val DEFAULT_STATE = ""
+        val DEFAULT_TRACKS_STATE = ArrayList<Track>()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         editTextState = savedInstanceState.getString(SEARCH_STATE, DEFAULT_STATE)
         binding.inputSearch.setText(editTextState)
+        tracksState = savedInstanceState.getSerializable(SEARCH_STATE) as ArrayList<Track>
+
     }
 }
