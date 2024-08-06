@@ -7,7 +7,8 @@
     android:orientation="horizontal"
     android:paddingHorizontal="14dp"
     android:paddingVertical="8dp"
-    android:id="@+id/track_item">
+    android:id="@+id/track_item"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/artwork_cover"

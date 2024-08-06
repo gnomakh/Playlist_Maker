@@ -42,7 +42,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var sharedPrefListener: OnSharedPreferenceChangeListener
 
     private lateinit var adapter: TracksAdapter
-    private var historyAdapter = HistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +66,23 @@ class SearchActivity : AppCompatActivity() {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             clearTrackList()
+            toggleSearchHistory()
+        }
+
+        var lastSearchQueue = ""
+
+        binding.updateButton.setOnClickListener {
+            queue(adapter, trackService, tracks, lastSearchQueue)
+        }
+
+        binding.clearHistory.setOnClickListener {
+            historySearch.clear()
+            toggleSearchHistory()
+        }
+
+        binding.youSearched.setOnClickListener {
+            historySearch.clear()
+            toggleSearchHistory()
         }
 
         inputEditText.doOnTextChanged { text, start, before, count ->
@@ -86,9 +102,8 @@ class SearchActivity : AppCompatActivity() {
         rvTrackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrackList.adapter = adapter
         adapter.trackList = tracks
-        historyAdapter.historySearch = historySearch
 
-        var lastSearchQueue = ""
+
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -98,28 +113,36 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        historySearch = prefConv.getArrFromPref(HISTORY_KEY)!!
-
-        showHistoryHints()
-
-        binding.updateButton.setOnClickListener {
-            queue(adapter, trackService, tracks, lastSearchQueue)
+        tracks.clear()
+        val history = prefConv.getArrFromPref(HISTORY_KEY)
+        if(history != null) {
+            historySearch = history
+            toggleSearchHistory()
         }
+
+        toggleSearchHistory()
+
+
         sharedPrefListener = OnSharedPreferenceChangeListener {sharedPreferences, key ->
             if(key == TRACK_KEY) {
                 val track = prefConv.getTrackFromPref()
                 if(track != null) {
-                    if(historySearch.size > 9) {
-                        historySearch.removeAt(9)
+                    checkIfTrackIsThere(track)
+                    if(historySearch.size > 10) {
+                        historySearch.removeAt(10)
                     }
                     checkIfTrackIsThere(track)
-                    prefConv.saveArrToPref(historySearch, HISTORY_KEY)
                     Toast.makeText(this,"Трек ${track.trackName} добавлен", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPrefListener)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        prefConv.saveArrToPref(historySearch, HISTORY_KEY)
     }
 
     fun queue(
@@ -141,7 +164,7 @@ class SearchActivity : AppCompatActivity() {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 tracks.addAll(response.body()?.results!!)
-                                adapter.notifyDataSetChanged()
+                                toggleSearchHistory()
                             } else {
                                 adapter.notifyDataSetChanged()
                                 binding.searchPlaceholder.visibility = View.VISIBLE
@@ -163,29 +186,25 @@ class SearchActivity : AppCompatActivity() {
         return true
     }
 
-    private fun showHistoryHints() {
-        if (historySearch.isEmpty() != true) {
-            if (tracks.isEmpty() == true) {
-                binding.youSearched.visibility = View.VISIBLE
-                binding.clearHistory.visibility = View.VISIBLE
-                rvTrackList.adapter = historyAdapter
-            }
+    private fun toggleSearchHistory() {
+        if(!tracks.isEmpty() or historySearch.isEmpty()) {
+            binding.youSearched.visibility = View.GONE
+            binding.clearHistory.visibility = View.GONE
+            adapter.trackList = tracks
+            adapter.notifyDataSetChanged()
+        } else if (!historySearch.isEmpty()) {
+            binding.youSearched.visibility = View.VISIBLE
+            binding.clearHistory.visibility = View.VISIBLE
+            adapter.trackList = historySearch
+            adapter.notifyDataSetChanged()
         }
     }
 
     private fun checkIfTrackIsThere(track: Track){
-        for (item in historySearch) {
-            if (item.trackId == track.trackId) {
-                historySearch.remove(item)
-                historySearch.add(0, track)
-            } else {
-                historySearch.add(0, track)
+            if (historySearch.contains(track)) {
+                historySearch.remove(track)
             }
-
-
-        }
-        historyAdapter.notifyDataSetChanged()
-        prefConv.saveArrToPref(historyAdapter.historySearch, HISTORY_KEY)
+        historySearch.add(0, track)
     }
 
     private fun clearTrackList() {

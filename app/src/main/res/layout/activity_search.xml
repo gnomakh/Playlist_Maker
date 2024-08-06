@@ -21,6 +21,7 @@
 
         <TextView
             style="@style/HeadingTextStyle"
+            android:paddingVertical="14dp"
             android:text="@string/search" />
 
     </LinearLayout>
@@ -29,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/search_shape"
         android:paddingHorizontal="16dp">
 
@@ -45,7 +47,7 @@
             android:maxLines="1"
             android:paddingVertical="8dp"
             android:singleLine="true"
-            android:textCursorDrawable="@drawable/search_cursor"/>
+            android:textCursorDrawable="@drawable/search_cursor" />
 
         <ImageView
             android:id="@+id/clearButton"
@@ -57,109 +59,115 @@
 
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/you_searched"
-        style="@style/HeadingTextStyle"
-        android:textSize="19sp"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:textAlignment="center"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/you_searched"
-        android:visibility="gone"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTracks"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/clear_history"
-        style="@style/RoundedButtonStyle"
-        android:layout_width="148dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/rounded_button"
-        android:text="@string/clear_history"
-        android:visibility="gone"/>
-
     <LinearLayout
-        android:id="@+id/search_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="102dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/nothing_found_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/search_placeholder" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            style="@style/SearchPlaceholderStyle"
-            android:layout_width="wrap_content"
+            android:id="@+id/you_searched"
+            style="@style/HeadingTextStyle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/nothing_found"
-            android:textAlignment="center" />
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/you_searched"
+            android:textAlignment="center"
+            android:textSize="19sp"
+            android:visibility="gone" />
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/network_error_palceholder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="102dp"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/network_error_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@drawable/network_error" />
-
-        <TextView
-            style="@style/SearchPlaceholderStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/network_error"
-            android:textAlignment="center" />
-
-        <TextView
-            style="@style/SearchPlaceholderStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="16dp"
-            android:text="@string/check_connection"
-            android:textAlignment="center" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/update_button"
+            android:id="@+id/clear_history"
             style="@style/RoundedButtonStyle"
-            android:layout_width="92dp"
+            android:layout_width="148dp"
             android:layout_height="36dp"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
             android:background="@drawable/rounded_button"
-            android:text="@string/update" />
+            android:text="@string/clear_history"
+            android:visibility="gone" />
 
     </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/search_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="102dp"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/nothing_found_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/search_placeholder" />
+
+            <TextView
+                style="@style/SearchPlaceholderStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/nothing_found"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/network_error_palceholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="102dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/network_error_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/network_error" />
+
+            <TextView
+                style="@style/SearchPlaceholderStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/network_error"
+                android:textAlignment="center" />
+
+            <TextView
+                style="@style/SearchPlaceholderStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:text="@string/check_connection"
+                android:textAlignment="center" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/update_button"
+                style="@style/RoundedButtonStyle"
+                android:layout_width="92dp"
+                android:layout_height="36dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/rounded_button"
+                android:text="@string/update" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
