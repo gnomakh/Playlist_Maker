@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,14 +35,23 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var rvTrackList: RecyclerView
 
     private val tracks = ArrayList<Track>()
+    private var historySearch = ArrayList<Track>()
 
-    private var adapter = TracksAdapter(tracks)
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var prefConv: PrefGsonConvert
+    private lateinit var sharedPrefListener: OnSharedPreferenceChangeListener
+
+    private lateinit var adapter: TracksAdapter
+    private var historyAdapter = HistoryAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val inflater = LayoutInflater.from(this)
         binding = ActivitySearchBinding.inflate(inflater)
         setContentView(binding.root)
+
+        sharedPreferences = getSharedPreferences(PREFS_KEY, MODE_PRIVATE)
+        prefConv = PrefGsonConvert(sharedPreferences)
 
         backButton = binding.backButton
         updateButton = binding.updateButton
@@ -65,9 +77,16 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+
+        }
+
+        adapter = TracksAdapter(sharedPreferences)
         rvTrackList = binding.rvTracks
         rvTrackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrackList.adapter = adapter
+        adapter.trackList = tracks
+        historyAdapter.historySearch = historySearch
 
         var lastSearchQueue = ""
 
@@ -79,9 +98,28 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
+        historySearch = prefConv.getArrFromPref(HISTORY_KEY)!!
+
+        showHistoryHints()
+
         binding.updateButton.setOnClickListener {
             queue(adapter, trackService, tracks, lastSearchQueue)
         }
+        sharedPrefListener = OnSharedPreferenceChangeListener {sharedPreferences, key ->
+            if(key == TRACK_KEY) {
+                val track = prefConv.getTrackFromPref()
+                if(track != null) {
+                    if(historySearch.size > 9) {
+                        historySearch.removeAt(9)
+                    }
+                    checkIfTrackIsThere(track)
+                    prefConv.saveArrToPref(historySearch, HISTORY_KEY)
+                    Toast.makeText(this,"Трек ${track.trackName} добавлен", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPrefListener)
     }
 
     fun queue(
@@ -123,6 +161,31 @@ class SearchActivity : AppCompatActivity() {
                 }
             })
         return true
+    }
+
+    private fun showHistoryHints() {
+        if (historySearch.isEmpty() != true) {
+            if (tracks.isEmpty() == true) {
+                binding.youSearched.visibility = View.VISIBLE
+                binding.clearHistory.visibility = View.VISIBLE
+                rvTrackList.adapter = historyAdapter
+            }
+        }
+    }
+
+    private fun checkIfTrackIsThere(track: Track){
+        for (item in historySearch) {
+            if (item.trackId == track.trackId) {
+                historySearch.remove(item)
+                historySearch.add(0, track)
+            } else {
+                historySearch.add(0, track)
+            }
+
+
+        }
+        historyAdapter.notifyDataSetChanged()
+        prefConv.saveArrToPref(historyAdapter.historySearch, HISTORY_KEY)
     }
 
     private fun clearTrackList() {
