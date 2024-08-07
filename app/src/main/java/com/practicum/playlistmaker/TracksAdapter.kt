@@ -25,8 +25,9 @@ class TracksAdapter(prefs: SharedPreferences) : RecyclerView.Adapter<TracksHolde
 
     override fun onBindViewHolder(holder: TracksHolder, position: Int) {
         holder.bind(trackList[position])
+
         holder.itemView.setOnClickListener {
-            prefCon.saveTrackToPref(trackList[position])
+            if (!historyIsShown) prefCon.saveTrackToPref(trackList[position])
         }
     }
 }

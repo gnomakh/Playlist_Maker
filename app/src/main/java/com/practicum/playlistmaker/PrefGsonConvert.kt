@@ -5,7 +5,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 const val PREFS_KEY = "key_for_prefs"
-const val LIST_KEY = "key_for_list"
 const val TRACK_KEY = "fact_key"
 const val HISTORY_KEY = "history_key"
 

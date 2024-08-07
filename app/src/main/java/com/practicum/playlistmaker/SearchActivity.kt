@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -13,6 +15,8 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +25,8 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.practicum.playlistmaker.network.*
+
+var historyIsShown = false
 
 class SearchActivity : AppCompatActivity() {
     private var editTextState: CharSequence? = DEFAULT_STATE
@@ -32,6 +38,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var updateButton: Button
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageView
+    private lateinit var clearHistoryBotton: Button
     private lateinit var rvTrackList: RecyclerView
 
     private val tracks = ArrayList<Track>()
@@ -56,17 +63,22 @@ class SearchActivity : AppCompatActivity() {
         updateButton = binding.updateButton
         inputEditText = binding.inputSearch
         clearButton = binding.clearButton
+        clearHistoryBotton = binding.clearHistory
+
+        val history = prefConv.getArrFromPref(HISTORY_KEY)
+        if (history != null) {
+            historySearch = history
+        }
 
         backButton.setOnClickListener {
             finish()
         }
 
         clearButton.setOnClickListener {
-            inputEditText.setText("")
+            inputEditText.text.clear()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             clearTrackList()
-            toggleSearchHistory()
         }
 
         var lastSearchQueue = ""
@@ -75,14 +87,9 @@ class SearchActivity : AppCompatActivity() {
             queue(adapter, trackService, tracks, lastSearchQueue)
         }
 
-        binding.clearHistory.setOnClickListener {
+        clearHistoryBotton.setOnClickListener {
             historySearch.clear()
-            toggleSearchHistory()
-        }
-
-        binding.youSearched.setOnClickListener {
-            historySearch.clear()
-            toggleSearchHistory()
+            toggleOffHistory()
         }
 
         inputEditText.doOnTextChanged { text, start, before, count ->
@@ -94,15 +101,37 @@ class SearchActivity : AppCompatActivity() {
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->
-
+            if (hasFocus and inputEditText.text.isEmpty()) {
+                toggleOnHistory()
+            } else {
+                binding.youSearched.visibility = View.GONE
+                binding.clearHistory.visibility = View.GONE
+                adapter.trackList = tracks
+                adapter.notifyDataSetChanged()
+            }
         }
+
+        inputEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
+                    toggleOnHistory()
+                } else {
+                    toggleOffHistory()
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
 
         adapter = TracksAdapter(sharedPreferences)
         rvTrackList = binding.rvTracks
         rvTrackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rvTrackList.adapter = adapter
         adapter.trackList = tracks
-
 
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
@@ -113,26 +142,16 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        tracks.clear()
-        val history = prefConv.getArrFromPref(HISTORY_KEY)
-        if(history != null) {
-            historySearch = history
-            toggleSearchHistory()
-        }
-
-        toggleSearchHistory()
-
-
-        sharedPrefListener = OnSharedPreferenceChangeListener {sharedPreferences, key ->
-            if(key == TRACK_KEY) {
+        sharedPrefListener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if (key == TRACK_KEY) {
                 val track = prefConv.getTrackFromPref()
-                if(track != null) {
+                if (track != null) {
                     checkIfTrackIsThere(track)
-                    if(historySearch.size > 10) {
+                    if (historySearch.size > 10) {
                         historySearch.removeAt(10)
                     }
-                    checkIfTrackIsThere(track)
-                    Toast.makeText(this,"Трек ${track.trackName} добавлен", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Трек ${track.trackName} добавлен", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -164,7 +183,7 @@ class SearchActivity : AppCompatActivity() {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 tracks.addAll(response.body()?.results!!)
-                                toggleSearchHistory()
+                                toggleOffHistory()
                             } else {
                                 adapter.notifyDataSetChanged()
                                 binding.searchPlaceholder.visibility = View.VISIBLE
@@ -186,24 +205,28 @@ class SearchActivity : AppCompatActivity() {
         return true
     }
 
-    private fun toggleSearchHistory() {
-        if(!tracks.isEmpty() or historySearch.isEmpty()) {
-            binding.youSearched.visibility = View.GONE
-            binding.clearHistory.visibility = View.GONE
-            adapter.trackList = tracks
-            adapter.notifyDataSetChanged()
-        } else if (!historySearch.isEmpty()) {
+    private fun toggleOnHistory() {
+        if (historySearch.isEmpty() == false) {
             binding.youSearched.visibility = View.VISIBLE
             binding.clearHistory.visibility = View.VISIBLE
             adapter.trackList = historySearch
             adapter.notifyDataSetChanged()
+            historyIsShown = true
         }
     }
 
-    private fun checkIfTrackIsThere(track: Track){
-            if (historySearch.contains(track)) {
-                historySearch.remove(track)
-            }
+    private fun toggleOffHistory() {
+        binding.youSearched.visibility = View.GONE
+        binding.clearHistory.visibility = View.GONE
+        adapter.trackList = tracks
+        adapter.notifyDataSetChanged()
+        historyIsShown = false
+    }
+
+    private fun checkIfTrackIsThere(track: Track) {
+        if (historySearch.contains(track)) {
+            historySearch.remove(track)
+        }
         historySearch.add(0, track)
     }
 
