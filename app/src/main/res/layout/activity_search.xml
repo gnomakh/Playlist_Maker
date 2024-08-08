@@ -21,6 +21,7 @@
 
         <TextView
             style="@style/HeadingTextStyle"
+            android:paddingVertical="14dp"
             android:text="@string/search" />
 
     </LinearLayout>
@@ -29,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/search_shape"
         android:paddingHorizontal="16dp">
 
@@ -45,8 +47,7 @@
             android:maxLines="1"
             android:paddingVertical="8dp"
             android:singleLine="true"
-            app:cornerRadius="16dp"
-            android:textCursorDrawable="@drawable/search_cursor"/>
+            android:textCursorDrawable="@drawable/search_cursor" />
 
         <ImageView
             android:id="@+id/clearButton"
@@ -55,15 +56,45 @@
             android:layout_gravity="end|center"
             android:src="@drawable/cross"
             android:visibility="gone" />
-
     </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTracks"
+    <TextView
+        android:id="@+id/you_searched"
+        style="@style/HeadingTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp" />
+        android:layout_gravity="center"
+        android:layout_marginTop="18dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/you_searched"
+        android:textAlignment="center"
+        android:textSize="19sp"
+        android:visibility="gone" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTracks"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/clear_history"
+            style="@style/RoundedButtonStyle"
+            android:layout_width="148dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/clear_history"
+            android:visibility="gone" />
+
+    </LinearLayout>
+    >
 
     <LinearLayout
         android:id="@+id/search_placeholder"
