@@ -10,36 +10,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import com.practicum.playlistmaker.network.*
 
-var historyIsShown = false
-
 class SearchActivity : AppCompatActivity() {
-    private var editTextState: CharSequence? = DEFAULT_STATE
-    private var tracksState: ArrayList<Track> = DEFAULT_TRACKS_STATE
 
     private lateinit var binding: ActivitySearchBinding
-
-    private lateinit var backButton: ImageView
-    private lateinit var updateButton: Button
-    private lateinit var inputEditText: EditText
-    private lateinit var clearButton: ImageView
-    private lateinit var clearHistoryBotton: Button
-    private lateinit var rvTrackList: RecyclerView
 
     private val tracks = ArrayList<Track>()
     private var historySearch = ArrayList<Track>()
@@ -56,26 +39,20 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(inflater)
         setContentView(binding.root)
 
-        sharedPreferences = getSharedPreferences(PREFS_KEY, MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences(PrefGsonConvert.PREFS_KEY, MODE_PRIVATE)
         prefConv = PrefGsonConvert(sharedPreferences)
 
-        backButton = binding.backButton
-        updateButton = binding.updateButton
-        inputEditText = binding.inputSearch
-        clearButton = binding.clearButton
-        clearHistoryBotton = binding.clearHistory
-
-        val history = prefConv.getArrFromPref(HISTORY_KEY)
+        val history = prefConv.getArrFromPref(PrefGsonConvert.HISTORY_KEY)
         if (history != null) {
             historySearch = history
         }
 
-        backButton.setOnClickListener {
+            binding.backButton.setOnClickListener {
             finish()
         }
 
-        clearButton.setOnClickListener {
-            inputEditText.text.clear()
+        binding.clearButton.setOnClickListener {
+            binding.inputSearch.text.clear()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
             clearTrackList()
@@ -87,21 +64,21 @@ class SearchActivity : AppCompatActivity() {
             queue(adapter, trackService, tracks, lastSearchQueue)
         }
 
-        clearHistoryBotton.setOnClickListener {
+        binding.clearHistory.setOnClickListener {
             historySearch.clear()
             toggleOffHistory()
         }
 
-        inputEditText.doOnTextChanged { text, start, before, count ->
+        binding.inputSearch.doOnTextChanged { text, start, before, count ->
             if (text.isNullOrEmpty()) {
-                clearButton.visibility = View.GONE
+                binding.clearButton.visibility = View.GONE
             } else {
-                clearButton.visibility = View.VISIBLE
+                binding.clearButton.visibility = View.VISIBLE
             }
         }
 
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus and inputEditText.text.isEmpty()) {
+            binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus and binding.inputSearch.text.isEmpty()) {
                 toggleOnHistory()
             } else {
                 binding.youSearched.visibility = View.GONE
@@ -111,12 +88,12 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        inputEditText.addTextChangedListener(object : TextWatcher {
+        binding.inputSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if (inputEditText.hasFocus() && p0?.isEmpty() == true) {
+                if (binding.inputSearch.hasFocus() && p0?.isEmpty() == true) {
                     toggleOnHistory()
                 } else {
                     toggleOffHistory()
@@ -128,13 +105,12 @@ class SearchActivity : AppCompatActivity() {
         })
 
         adapter = TracksAdapter(sharedPreferences)
-        rvTrackList = binding.rvTracks
-        rvTrackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        rvTrackList.adapter = adapter
+        binding.rvTracks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvTracks.adapter = adapter
         adapter.trackList = tracks
 
 
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+        binding.inputSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 lastSearchQueue = binding.inputSearch.text.toString()
                 queue(adapter, trackService, tracks, lastSearchQueue)
@@ -143,7 +119,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         sharedPrefListener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == TRACK_KEY) {
+            if (key == PrefGsonConvert.TRACK_KEY) {
                 val track = prefConv.getTrackFromPref()
                 if (track != null) {
                     checkIfTrackIsThere(track)
@@ -161,7 +137,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        prefConv.saveArrToPref(historySearch, HISTORY_KEY)
+        prefConv.saveArrToPref(historySearch, PrefGsonConvert.HISTORY_KEY)
     }
 
     fun queue(
@@ -211,7 +187,7 @@ class SearchActivity : AppCompatActivity() {
             binding.clearHistory.visibility = View.VISIBLE
             adapter.trackList = historySearch
             adapter.notifyDataSetChanged()
-            historyIsShown = true
+            adapter.setHistoryShown(true)
         }
     }
 
@@ -220,7 +196,7 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistory.visibility = View.GONE
         adapter.trackList = tracks
         adapter.notifyDataSetChanged()
-        historyIsShown = false
+        adapter.setHistoryShown(false)
     }
 
     private fun checkIfTrackIsThere(track: Track) {
@@ -233,25 +209,5 @@ class SearchActivity : AppCompatActivity() {
     private fun clearTrackList() {
         tracks.clear()
         adapter.notifyDataSetChanged()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_STATE, editTextState.toString())
-        outState.putSerializable(SEARCH_STATE, tracksState)
-    }
-
-    companion object {
-        const val SEARCH_STATE = "SEARCH_STATE"
-        const val DEFAULT_STATE = ""
-        val DEFAULT_TRACKS_STATE = ArrayList<Track>()
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        editTextState = savedInstanceState.getString(SEARCH_STATE, DEFAULT_STATE)
-        binding.inputSearch.setText(editTextState)
-        tracksState = savedInstanceState.getSerializable(SEARCH_STATE) as ArrayList<Track>
-
     }
 }

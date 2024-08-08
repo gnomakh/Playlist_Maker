@@ -1,20 +1,12 @@
 package com.practicum.playlistmaker
 
-import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Switch
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 const val PREFS = "PREFS_KEY"
@@ -47,8 +39,6 @@ class SettingsActivity : AppCompatActivity() {
             sharedPreferences.edit()
                 .putBoolean(SWITCH_KEY, isChecked).apply()
             (applicationContext as App).switchTheme(switchChecked)
-
-
         }
 
         shareButton.setOnClickListener {
@@ -74,31 +64,5 @@ class SettingsActivity : AppCompatActivity() {
             val agreementIntent = Intent(Intent.ACTION_VIEW, url)
             startActivity(agreementIntent)
         }
-    }
-}
-
-class App : Application() {
-
-    var darkTheme = false
-
-
-    override fun onCreate() {
-        super.onCreate()
-
-        val sharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
-        darkTheme = sharedPreferences.getBoolean(SWITCH_KEY, false)
-        switchTheme(darkTheme)
-    }
-
-    fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
-        AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
-                AppCompatDelegate.MODE_NIGHT_YES
-            } else {
-                AppCompatDelegate.MODE_NIGHT_NO
-            }
-        )
     }
 }
