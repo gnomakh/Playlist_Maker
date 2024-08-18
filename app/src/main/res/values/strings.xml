@@ -25,4 +25,17 @@
     <string name="you_searched">Вы искали</string>
     <string name="clear_history">Очистить историю</string>
 
+
+    <string name="durationText">Длительность</string>
+    <string name="albumText">Альбом</string>
+    <string name="yearText">Год</string>
+    <string name="genreText">Жанр</string>
+    <string name="countryText">Страна</string>
+
+    <string name="duration_pl">00:00</string>
+    <string name="album_pl">Альбом</string>
+    <string name="year_pl">2099</string>
+    <string name="genre_pl">Жанр</string>
+    <string name="country_pl">Страна</string>
+
 </resources>

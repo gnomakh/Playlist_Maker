@@ -109,7 +109,6 @@ class SearchActivity : AppCompatActivity() {
         binding.rvTracks.adapter = adapter
         adapter.trackList = tracks
 
-
         binding.inputSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 lastSearchQueue = binding.inputSearch.text.toString()
@@ -126,8 +125,7 @@ class SearchActivity : AppCompatActivity() {
                     if (historySearch.size > 10) {
                         historySearch.removeAt(10)
                     }
-                    Toast.makeText(this, "Трек ${track.trackName} добавлен", Toast.LENGTH_SHORT)
-                        .show()
+                    adapter.notifyDataSetChanged()
                 }
             }
         }
