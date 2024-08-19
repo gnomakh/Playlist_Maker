@@ -15,10 +15,14 @@
     <color name="searchContentColor">#AEAFB4</color>
 
     <color name="trackNameColor">#000000</color>
-    <color name="artist_name_color">#AEAFB4</color>
+    <color name="artistNameColor">#AEAFB4</color>
 
-    <color name="rounded_button_color">#1A1B22</color>
-    <color name="rounded_button_text_color">#FFFFFF</color>
+    <color name="roundedButtonColor">#1A1B22</color>
+    <color name="roundedButtonTextColor">#FFFFFF</color>
 
-    <color name="search_cursor_color">#3772E7</color>
+    <color name="searchCursorColor">#3772E7</color>
+
+    <color name="addAndLikeButtonsColor">#401A1B22</color>
+
+    <color name="trackDetailsColor">#AEAFB4</color>
 </resources>

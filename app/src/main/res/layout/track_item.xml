@@ -7,8 +7,7 @@
     android:orientation="horizontal"
     android:paddingHorizontal="14dp"
     android:paddingVertical="8dp"
-    android:id="@+id/track_item"
-    android:clickable="true">
+    android:id="@+id/track_item">
 
     <ImageView
         android:id="@+id/artwork_cover"
@@ -33,7 +32,6 @@
             android:maxLines="1"
             android:text="@string/text_placeholder" />
 
-        <!-- использую constraint layout, потому что в linear съезжает разделительная точка -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,7 +63,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/track_duration"
                 app:layout_constraintStart_toEndOf="@+id/artist_name"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/artist_name_color" />
+                app:tint="@color/artistNameColor" />
 
             <TextView
                 android:id="@+id/track_duration"

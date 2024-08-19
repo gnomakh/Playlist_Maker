@@ -19,6 +19,7 @@
             android:src="@drawable/arrow_back" />
 
         <TextView
+            android:paddingVertical="14dp"
             style="@style/HeadingTextStyle"
             android:text="@string/settings" />
 
