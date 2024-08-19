@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -185,7 +184,6 @@ class SearchActivity : AppCompatActivity() {
             binding.clearHistory.visibility = View.VISIBLE
             adapter.trackList = historySearch
             adapter.notifyDataSetChanged()
-            adapter.setHistoryShown(true)
         }
     }
 
@@ -194,7 +192,6 @@ class SearchActivity : AppCompatActivity() {
         binding.clearHistory.visibility = View.GONE
         adapter.trackList = tracks
         adapter.notifyDataSetChanged()
-        adapter.setHistoryShown(false)
     }
 
     private fun checkIfTrackIsThere(track: Track) {

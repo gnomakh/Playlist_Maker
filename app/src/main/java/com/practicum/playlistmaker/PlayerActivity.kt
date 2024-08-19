@@ -28,23 +28,24 @@ class PlayerActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences(PrefGsonConvert.PREFS_KEY, MODE_PRIVATE)
         prefConv = PrefGsonConvert(sharedPreferences)
 
-        val trackOnPlayer = prefConv.getTrackFromPref()
+        val trackOnPlayer = prefConv.getTrackFromPref() ?: return finish()
 
         binding.backButton.setOnClickListener {
             finish()
         }
 
-        Glide.with(this).load(trackOnPlayer?.artworkUrl100?.replaceAfterLast('/',"512x512bb.jpg")).placeholder(R.drawable.placeholder_player).fitCenter()
+        Glide.with(this).load(trackOnPlayer.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(R.drawable.placeholder_player).fitCenter()
             .transform(RoundedCorners(this.dpToPx(8.0F))).into(binding.artworkCover)
 
-        binding.trackName.text = trackOnPlayer?.trackName
-        binding.artistName.text = trackOnPlayer?.artistName
-        binding.durationPl.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackOnPlayer?.trackTimeMillis)
-        binding.timeUnderButton.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackOnPlayer?.trackTimeMillis)
-        binding.albumPl.text = trackOnPlayer?.collectionName
-        binding.yearPl.text = trackOnPlayer?.releaseDate?.substring(0, 4)
-        binding.genrePl.text = trackOnPlayer?.primaryGenreName
-        binding.countryPl.text = trackOnPlayer?.country
+        with(binding) {
+            trackName.text = trackOnPlayer.trackName
+            artistName.text = trackOnPlayer.artistName
+            durationPl.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackOnPlayer.trackTimeMillis)
+            timeUnderButton.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackOnPlayer.trackTimeMillis)
+            albumPl.text = trackOnPlayer.collectionName
+            yearPl.text = trackOnPlayer.releaseDate.substring(0, 4)
+            genrePl.text = trackOnPlayer.primaryGenreName
+            countryPl.text = trackOnPlayer.country
+        }
     }
-
 }

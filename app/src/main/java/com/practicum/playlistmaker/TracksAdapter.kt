@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.TrackItemBinding
 
 class TracksAdapter(prefs: SharedPreferences) : RecyclerView.Adapter<TracksHolder>() {
-    private var historyIsShown = false
     var trackList = ArrayList<Track>()
 
     private val prefCon = PrefGsonConvert(prefs)
@@ -29,19 +28,12 @@ class TracksAdapter(prefs: SharedPreferences) : RecyclerView.Adapter<TracksHolde
     override fun onBindViewHolder(holder: TracksHolder, position: Int) {
         holder.bind(trackList[position])
 
-
-
         holder.itemView.setOnClickListener {
 
             prefCon.saveTrackToPref(trackList[position])
-//            if (!historyIsShown) prefCon.saveTrackToPref(trackList[position])
 
             val intent = Intent(holder.itemView.context as Activity, PlayerActivity::class.java)
             startActivity(holder.itemView.context as Activity, intent, null)
         }
-    }
-
-    fun setHistoryShown(isShown: Boolean) {
-        historyIsShown = isShown
     }
 }
