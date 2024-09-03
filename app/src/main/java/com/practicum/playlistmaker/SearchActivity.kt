@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -32,6 +34,10 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var adapter: TracksAdapter
 
+    private val handler = Handler(Looper.getMainLooper())
+    private val runnable = Runnable { searchRequest() }
+    private var lastSearchQueue = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val inflater = LayoutInflater.from(this)
@@ -46,7 +52,7 @@ class SearchActivity : AppCompatActivity() {
             historySearch = history
         }
 
-            binding.backButton.setOnClickListener {
+        binding.backButton.setOnClickListener {
             finish()
         }
 
@@ -57,9 +63,8 @@ class SearchActivity : AppCompatActivity() {
             clearTrackList()
         }
 
-        var lastSearchQueue = ""
-
         binding.updateButton.setOnClickListener {
+            binding.progressBar.visibility = View.VISIBLE
             queue(adapter, trackService, tracks, lastSearchQueue)
         }
 
@@ -76,7 +81,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-            binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
+        binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus and binding.inputSearch.text.isEmpty()) {
                 toggleOnHistory()
             } else {
@@ -92,6 +97,8 @@ class SearchActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                debounceRequest()
+                if (p0.isNullOrEmpty() == true) clearTrackList()
                 if (binding.inputSearch.hasFocus() && p0?.isEmpty() == true) {
                     toggleOnHistory()
                 } else {
@@ -104,17 +111,10 @@ class SearchActivity : AppCompatActivity() {
         })
 
         adapter = TracksAdapter(sharedPreferences)
-        binding.rvTracks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvTracks.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvTracks.adapter = adapter
         adapter.trackList = tracks
-
-        binding.inputSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                lastSearchQueue = binding.inputSearch.text.toString()
-                queue(adapter, trackService, tracks, lastSearchQueue)
-            }
-            false
-        }
 
         sharedPrefListener = OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == PrefGsonConvert.TRACK_KEY) {
@@ -150,6 +150,7 @@ class SearchActivity : AppCompatActivity() {
                 override fun onResponse(
                     call: Call<SearchResponse>, response: Response<SearchResponse>
                 ) {
+                    binding.progressBar.visibility = View.GONE
 
                     when (response.code()) {
                         200 -> {
@@ -171,11 +172,20 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
+                    binding.progressBar.visibility = View.GONE
                     clearTrackList()
                     binding.networkErrorPalceholder.visibility = View.VISIBLE
                 }
             })
         return true
+    }
+
+    private fun searchRequest() {
+        if(binding.inputSearch.text.isNullOrEmpty() == false) {
+            lastSearchQueue = binding.inputSearch.text.toString()
+            queue(adapter, trackService, tracks, lastSearchQueue)
+            binding.progressBar.visibility = View.VISIBLE
+        }
     }
 
     private fun toggleOnHistory() {
@@ -204,5 +214,14 @@ class SearchActivity : AppCompatActivity() {
     private fun clearTrackList() {
         tracks.clear()
         adapter.notifyDataSetChanged()
+    }
+
+    private fun debounceRequest() {
+        handler.removeCallbacks(runnable)
+        handler.postDelayed(runnable, SEARCH_DEBOUNCE_DELAY)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }
