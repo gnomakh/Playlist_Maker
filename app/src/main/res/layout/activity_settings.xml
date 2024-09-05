@@ -14,9 +14,14 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="28dp"
             android:id="@+id/back_button"
             style="@style/BackArrow"
-            android:src="@drawable/arrow_back" />
+            android:src="@drawable/arrow_back"/>
 
         <TextView
             android:paddingVertical="14dp"
