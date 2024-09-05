@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
@@ -64,7 +63,8 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.updateButton.setOnClickListener {
-            binding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.isVisible = true
+
             queue(adapter, trackService, tracks, lastSearchQueue)
         }
 
@@ -74,41 +74,33 @@ class SearchActivity : AppCompatActivity() {
         }
 
         binding.inputSearch.doOnTextChanged { text, start, before, count ->
-            if (text.isNullOrEmpty()) {
-                binding.clearButton.visibility = View.GONE
-            } else {
-                binding.clearButton.visibility = View.VISIBLE
-            }
+            binding.clearButton.isVisible = !(text.isNullOrEmpty())
         }
 
         binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus and binding.inputSearch.text.isEmpty()) {
                 toggleOnHistory()
             } else {
-                binding.youSearched.visibility = View.GONE
-                binding.clearHistory.visibility = View.GONE
+                binding.youSearched.isVisible = false
+                binding.clearHistory.isVisible = false
                 adapter.trackList = tracks
                 adapter.notifyDataSetChanged()
             }
         }
 
-        binding.inputSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        binding.inputSearch.addTextChangedListener(
+            beforeTextChanged = { text: CharSequence?, start: Int, count: Int, after: Int ->  },
+            onTextChanged = { text: CharSequence?, start: Int, before: Int, count: Int ->
                 debounceRequest()
-                if (p0.isNullOrEmpty() == true) clearTrackList()
-                if (binding.inputSearch.hasFocus() && p0?.isEmpty() == true) {
+                if (text.isNullOrEmpty() == true) clearTrackList()
+                if (binding.inputSearch.hasFocus() && text?.isEmpty() == true) {
                     toggleOnHistory()
                 } else {
                     toggleOffHistory()
                 }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        })
+            },
+            afterTextChanged = {text: Editable? ->  }
+        )
 
         adapter = TracksAdapter(sharedPreferences)
         binding.rvTracks.layoutManager =
@@ -143,14 +135,14 @@ class SearchActivity : AppCompatActivity() {
         tracks: ArrayList<Track>,
         searchQueue: String
     ): Boolean {
-        binding.searchPlaceholder.visibility = View.GONE
-        binding.networkErrorPalceholder.visibility = View.GONE
+        binding.searchPlaceholder.isVisible = false
+        binding.networkErrorPalceholder.isVisible = false
         trackService.search(searchQueue)
             .enqueue(object : Callback<SearchResponse> {
                 override fun onResponse(
                     call: Call<SearchResponse>, response: Response<SearchResponse>
                 ) {
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.isVisible = false
 
                     when (response.code()) {
                         200 -> {
@@ -160,21 +152,21 @@ class SearchActivity : AppCompatActivity() {
                                 toggleOffHistory()
                             } else {
                                 adapter.notifyDataSetChanged()
-                                binding.searchPlaceholder.visibility = View.VISIBLE
+                                binding.searchPlaceholder.isVisible = true
                             }
                         }
 
                         else -> {
                             clearTrackList()
-                            binding.networkErrorPalceholder.visibility = View.VISIBLE
+                            binding.networkErrorPalceholder.isVisible = true
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.isVisible = false
                     clearTrackList()
-                    binding.networkErrorPalceholder.visibility = View.VISIBLE
+                    binding.networkErrorPalceholder.isVisible = true
                 }
             })
         return true
@@ -184,22 +176,22 @@ class SearchActivity : AppCompatActivity() {
         if(binding.inputSearch.text.isNullOrEmpty() == false) {
             lastSearchQueue = binding.inputSearch.text.toString()
             queue(adapter, trackService, tracks, lastSearchQueue)
-            binding.progressBar.visibility = View.VISIBLE
+            binding.progressBar.isVisible = true
         }
     }
 
     private fun toggleOnHistory() {
         if (historySearch.isEmpty() == false) {
-            binding.youSearched.visibility = View.VISIBLE
-            binding.clearHistory.visibility = View.VISIBLE
+            binding.youSearched.isVisible = true
+            binding.clearHistory.isVisible = true
             adapter.trackList = historySearch
             adapter.notifyDataSetChanged()
         }
     }
 
     private fun toggleOffHistory() {
-        binding.youSearched.visibility = View.GONE
-        binding.clearHistory.visibility = View.GONE
+        binding.youSearched.isVisible = false
+        binding.clearHistory.isVisible = false
         adapter.trackList = tracks
         adapter.notifyDataSetChanged()
     }

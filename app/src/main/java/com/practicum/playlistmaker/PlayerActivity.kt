@@ -2,21 +2,15 @@ package com.practicum.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -27,11 +21,12 @@ class PlayerActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var prefConv: PrefGsonConvert
 
-    companion object {
-        private const val DEFAULT_STATE = "DEFAULT"
-        private const val PREPARED_STATE = "PREPARED"
-        private const val PLAYING_STATE = "PLAYING"
-        private const val PAUSED_STATE = "PAUSED"
+    private companion object {
+        const val DEFAULT_STATE = "DEFAULT"
+        const val PREPARED_STATE = "PREPARED"
+        const val PLAYING_STATE = "PLAYING"
+        const val PAUSED_STATE = "PAUSED"
+        const val timeUpdateDelay = 333L
     }
 
     private var playerState = DEFAULT_STATE
@@ -50,11 +45,7 @@ class PlayerActivity : AppCompatActivity() {
         val trackOnPlayer = prefConv.getTrackFromPref() ?: return finish()
         val trackUrl = trackOnPlayer.previewUrl
 
-        if(trackUrl != null) {
-            preparePlayer(trackUrl)
-        } else {
-            Toast.makeText(this, "Не удалось получить ссылку на отрывок", Toast.LENGTH_SHORT).show()
-        }
+        preparePlayer(trackUrl)
 
         binding.backButton.setOnClickListener {
             finish()
@@ -67,7 +58,7 @@ class PlayerActivity : AppCompatActivity() {
             trackName.text = trackOnPlayer.trackName
             artistName.text = trackOnPlayer.artistName
             durationPl.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(trackOnPlayer.trackTimeMillis)
-            timeUnderButton.text = "00:00"
+            playbackTime.text = "00:00"
             albumPl.text = trackOnPlayer.collectionName
             yearPl.text = trackOnPlayer.releaseDate.substring(0, 4)
             genrePl.text = trackOnPlayer.primaryGenreName
@@ -76,13 +67,14 @@ class PlayerActivity : AppCompatActivity() {
 
         binding.playButton.setOnClickListener {
             playbackControl()
-            updateTimer()
         }
     }
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        if (playerState == PLAYING_STATE) {
+            pausePlayer()
+        }
     }
 
     override fun onDestroy() {
@@ -107,6 +99,7 @@ class PlayerActivity : AppCompatActivity() {
     private fun startPlayer() {
         mediaPlayer.start()
         playerState = PLAYING_STATE
+        updateTimer()
         binding.playButton.setImageResource(R.drawable.pause_button)
     }
 
@@ -132,16 +125,16 @@ class PlayerActivity : AppCompatActivity() {
         handler.postDelayed(
             object : Runnable {
                 override fun run() {
-                    binding.timeUnderButton.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
                     if (playerState == PLAYING_STATE) {
+                        binding.playbackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
                         handler.postDelayed(
-                            this, 333
+                            this, timeUpdateDelay
                         )
                     } else if (playerState == PREPARED_STATE) {
-                        binding.timeUnderButton.text = "00:00"
+                        binding.playbackTime.text = "00:00"
                     }
                 }
-            }, 333
+            }, timeUpdateDelay
         )
     }
 }
