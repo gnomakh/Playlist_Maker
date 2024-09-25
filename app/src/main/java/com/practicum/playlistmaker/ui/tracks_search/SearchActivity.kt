@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.tracks_search
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,11 +14,10 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.practicum.playlistmaker.PrefGsonConvert
+import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import com.practicum.playlistmaker.network.*
+import com.practicum.playlistmaker.domain.models.Track
 
 class SearchActivity : AppCompatActivity() {
 
@@ -36,6 +35,10 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable { searchRequest() }
     private var lastSearchQueue = ""
+
+
+//
+    val clearEditText = Creator.provideClearEditTextUseCase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,13 +62,12 @@ class SearchActivity : AppCompatActivity() {
             binding.inputSearch.text.clear()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
-            clearTrackList()
+            // clearTrackList()
         }
 
         binding.updateButton.setOnClickListener {
             binding.progressBar.isVisible = true
-
-            queue(adapter, trackService, tracks, lastSearchQueue)
+            // запрос треков
         }
 
         binding.clearHistory.setOnClickListener {
@@ -130,52 +132,14 @@ class SearchActivity : AppCompatActivity() {
     }
 
     fun queue(
-        adapter: TracksAdapter,
-        trackService: ITunesAPI,
-        tracks: ArrayList<Track>,
-        searchQueue: String
-    ): Boolean {
-        binding.searchPlaceholder.isVisible = false
-        binding.networkErrorPalceholder.isVisible = false
-        trackService.search(searchQueue)
-            .enqueue(object : Callback<SearchResponse> {
-                override fun onResponse(
-                    call: Call<SearchResponse>, response: Response<SearchResponse>
-                ) {
-                    binding.progressBar.isVisible = false
+    ) {
 
-                    when (response.code()) {
-                        200 -> {
-                            tracks.clear()
-                            if (response.body()?.results?.isNotEmpty() == true) {
-                                tracks.addAll(response.body()?.results!!)
-                                toggleOffHistory()
-                            } else {
-                                adapter.notifyDataSetChanged()
-                                binding.searchPlaceholder.isVisible = true
-                            }
-                        }
-
-                        else -> {
-                            clearTrackList()
-                            binding.networkErrorPalceholder.isVisible = true
-                        }
-                    }
-                }
-
-                override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    binding.progressBar.isVisible = false
-                    clearTrackList()
-                    binding.networkErrorPalceholder.isVisible = true
-                }
-            })
-        return true
     }
 
     private fun searchRequest() {
         if(binding.inputSearch.text.isNullOrEmpty() == false) {
             lastSearchQueue = binding.inputSearch.text.toString()
-            queue(adapter, trackService, tracks, lastSearchQueue)
+            queue()
             binding.progressBar.isVisible = true
         }
     }

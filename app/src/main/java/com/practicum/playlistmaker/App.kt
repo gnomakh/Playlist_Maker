@@ -3,6 +3,8 @@ package com.practicum.playlistmaker
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.ui.menues.PREFS
+import com.practicum.playlistmaker.ui.menues.SWITCH_KEY
 
 class App : Application() {
 

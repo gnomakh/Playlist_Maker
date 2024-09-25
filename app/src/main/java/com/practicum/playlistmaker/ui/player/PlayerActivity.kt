@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.player
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.PrefGsonConvert
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.ui.menues.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,7 +54,9 @@ class PlayerActivity : AppCompatActivity() {
             finish()
         }
 
-        Glide.with(this).load(trackOnPlayer.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(R.drawable.placeholder_player).fitCenter()
+        Glide.with(this).load(trackOnPlayer.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(
+            R.drawable.placeholder_player
+        ).fitCenter()
             .transform(RoundedCorners(this.dpToPx(8.0F))).into(binding.artworkCover)
 
         with(binding) {

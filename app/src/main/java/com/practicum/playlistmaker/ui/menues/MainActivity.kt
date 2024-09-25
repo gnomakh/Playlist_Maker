@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.ui.menues
 
 import android.content.Context
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
+import com.practicum.playlistmaker.ui.tracks_search.SearchActivity
 
 class MainActivity : AppCompatActivity() {
 
