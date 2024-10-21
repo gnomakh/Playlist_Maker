@@ -20,7 +20,7 @@ class TracksAdapter(prefs: SharedPreferences) : RecyclerView.Adapter<TracksHolde
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    var trackList = ArrayList<Track>()
+    var trackList = emptyList<Track>()
 
     private val prefCon = PrefGsonConvert(prefs)
 

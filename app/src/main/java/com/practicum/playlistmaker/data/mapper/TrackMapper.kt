@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.presentation.mapper
+package com.practicum.playlistmaker.data.mapper
 
 import com.practicum.playlistmaker.domain.models.Track
 

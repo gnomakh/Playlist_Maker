@@ -28,8 +28,7 @@ class PrefGsonConvert(val prefs: SharedPreferences) {
     fun getArrFromPref(key: String) : ArrayList<Track>? {
         val jsonStr = prefs.getString(key, null) ?: return null
         val listType = object : TypeToken<ArrayList<Track>>() {}.type
-        val facts = Gson().fromJson<ArrayList<Track>>(jsonStr, listType)
-        return facts
+        return Gson().fromJson<ArrayList<Track>>(jsonStr, listType)
     }
 
     companion object {
