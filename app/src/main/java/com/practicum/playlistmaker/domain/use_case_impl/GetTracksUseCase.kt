@@ -1,29 +1,25 @@
-package com.practicum.playlistmaker.domain.use_case
+package com.practicum.playlistmaker.domain.use_case_impl
 
 import com.practicum.playlistmaker.domain.repository.TrackRepository
 import com.practicum.playlistmaker.domain.consumer.TrackConsumer
+import com.practicum.playlistmaker.domain.models.Track
 import java.util.concurrent.Executors
 
 class GetTracksUseCase(private val trackRepository: TrackRepository) {
-
-    companion object {
-        private const val NO_RESULT = "No result"
-        private const val NO_INTERNET = "No internet"
-    }
 
     private val executor = Executors.newSingleThreadExecutor()
 
     fun execute(expression: String, consumer: TrackConsumer) {
         executor.execute {
             try {
-                val response = trackRepository.searchTracks(expression)
-                if (response.isNullOrEmpty() == false) {
-                    consumer.onSuccess(response)
+                val foundTracks = trackRepository.searchTracks(expression) as ArrayList<Track>
+                if (foundTracks.isNotEmpty()) {
+                    consumer.onSuccess(foundTracks)
                 } else {
-                    consumer.onFailure(NO_RESULT)
+                    consumer.onNoResult()
                 }
             } catch (e : Exception) {
-                consumer.onFailure(NO_INTERNET)
+                consumer.onNetworkError()
             }
         }
     }

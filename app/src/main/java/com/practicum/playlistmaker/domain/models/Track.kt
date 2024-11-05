@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.domain.models
 data class Track(
     val trackName: String,
     val artistName: String,
-    val trackTimeMillis: Long,
+    val trackTimeMillis: String,
     val artworkUrl100: String,
     val trackId: Int,
     val collectionName: String,

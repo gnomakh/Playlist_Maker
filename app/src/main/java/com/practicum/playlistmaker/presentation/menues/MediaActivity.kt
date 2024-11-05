@@ -1,13 +1,11 @@
-package com.practicum.playlistmaker.ui.menues
+package com.practicum.playlistmaker.presentation.menues
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.R
 
 class MediaActivity : AppCompatActivity() {
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media)

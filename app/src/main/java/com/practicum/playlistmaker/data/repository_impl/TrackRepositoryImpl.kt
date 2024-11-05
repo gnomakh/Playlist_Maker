@@ -1,26 +1,23 @@
 package com.practicum.playlistmaker.data.repository_impl
 
-import android.annotation.SuppressLint
 import com.practicum.playlistmaker.data.NetworkClient
-import com.practicum.playlistmaker.data.dto.Response
 import com.practicum.playlistmaker.data.dto.SearchRequest
 import com.practicum.playlistmaker.data.dto.SearchResponse
 import com.practicum.playlistmaker.domain.repository.TrackRepository
 import com.practicum.playlistmaker.domain.models.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
-    override var resultCode = 0
 
-    @SuppressLint("SuspiciousIndentation")
-    override fun searchTracks(expression: String) : ArrayList<Track>{
-        var response: Response = networkClient.doRequest(SearchRequest(expression))
-        resultCode = response.resultCode
-        if (resultCode == 200) {
-            return ArrayList((response as SearchResponse).results.map {
+    override fun searchTracks(expression: String) : List<Track>{
+        var response = networkClient.doRequest(SearchRequest(expression))
+        if (response.resultCode == 200) {
+            return ((response as SearchResponse).results.map {
                 Track(
                     it.trackName,
                     it.artistName,
-                    it.trackTimeMillis,
+                    SimpleDateFormat("mm:ss", Locale.getDefault()).format(it.trackTimeMillis),
                     it.artworkUrl100,
                     it.trackId,
                     it.collectionName,
@@ -29,7 +26,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     it.country,
                     it.previewUrl
                 )
-            })
-        } else return arrayListOf()
+            }) as ArrayList<Track>
+        } else return emptyList()
     }
 }

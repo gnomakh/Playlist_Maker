@@ -1,21 +1,26 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation
 
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.ui.menues.PREFS
-import com.practicum.playlistmaker.ui.menues.SWITCH_KEY
+import com.practicum.playlistmaker.creator.Creator
 
 class App : Application() {
 
     var darkTheme = false
 
+    companion object {
+        private lateinit var appInstance: App
+        fun getContext(): Context {
+            return appInstance.applicationContext
+        }
+    }
+
     override fun onCreate() {
         super.onCreate()
-
-        val sharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
-        darkTheme = sharedPreferences.getBoolean(SWITCH_KEY, false)
+        appInstance = this
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        darkTheme = Creator.provideSettingsInteractor().getDarkThemeState()
         switchTheme(darkTheme)
     }
 
