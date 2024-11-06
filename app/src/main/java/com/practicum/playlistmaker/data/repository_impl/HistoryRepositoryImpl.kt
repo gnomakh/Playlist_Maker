@@ -10,9 +10,17 @@ import com.practicum.playlistmaker.domain.repository.HistoryRepository
 class HistoryRepositoryImpl(context: Context) : HistoryRepository {
 
     private val sharedPreferences = context.getSharedPreferences(PREFS_KEY, Application.MODE_PRIVATE)
+    private val gSon = Gson()
+
+    override fun addTrackToHistory(array: ArrayList<Track>, track: Track) : ArrayList<Track> {
+        array.removeIf { it.trackId == track.trackId }
+        if(array.size > 9) array.removeLast()
+        array.add(0, track)
+        return array
+    }
 
     override fun saveHistory(array: ArrayList<Track>) {
-        val conv = Gson().toJson(array)
+        val conv = gSon.toJson(array)
         sharedPreferences.edit().
         putString(HISTORY_KEY, conv)
             .apply()

@@ -1,5 +1,7 @@
 package com.practicum.playlistmaker.creator
 
+import android.annotation.SuppressLint
+import android.content.Context
 import com.practicum.playlistmaker.presentation.App
 import com.practicum.playlistmaker.data.NetworkClient
 import com.practicum.playlistmaker.data.repository_impl.TrackRepositoryImpl
@@ -19,7 +21,16 @@ import com.practicum.playlistmaker.domain.use_case_impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.domain.use_case_impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.domain.use_case_impl.SettingsInteractorImpl
 
+@SuppressLint("StaticFieldLeak")
 object Creator {
+
+    private var context: Context? = null
+
+    fun initialize(context: Context) {
+        if (this.context == null) {
+            this.context = context.applicationContext
+        }
+    }
 
     fun providePlayerInteractor() : PlayerInteractor {
         return PlayerInteractorImpl(providePlayerRepository())
@@ -34,7 +45,7 @@ object Creator {
     }
 
     private fun provideHistoryRepository() : HistoryRepository {
-        return HistoryRepositoryImpl(App.getContext())
+        return HistoryRepositoryImpl(context as Context)
     }
 
     fun provideGetTracksUseCase() : GetTracksUseCase {
@@ -54,6 +65,6 @@ object Creator {
     }
 
     private fun provideSettingsRepository() : SettingsRepository{
-        return SettingsRepositoryImpl(App.getContext())
+        return SettingsRepositoryImpl(context as Context)
     }
 }

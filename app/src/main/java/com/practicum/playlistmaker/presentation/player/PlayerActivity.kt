@@ -66,7 +66,7 @@ class PlayerActivity : AppCompatActivity(), PlayerListener {
             trackName.text = trackOnPlayer.trackName
             artistName.text = trackOnPlayer.artistName
             durationPl.text = trackOnPlayer.trackTimeMillis
-            playbackTime.text = "00:00"
+            playbackTime.text = getString(R.string.duration_pl)
             albumPl.text = trackOnPlayer.collectionName
             yearPl.text = trackOnPlayer.releaseDate.substring(0, 4)
             genrePl.text = trackOnPlayer.primaryGenreName
@@ -77,7 +77,7 @@ class PlayerActivity : AppCompatActivity(), PlayerListener {
     override fun onPlayerStop() {
         binding.playButton.setImageResource(R.drawable.play_button)
         handler?.removeCallbacks(timeUpdateRunnable)
-        binding.playbackTime.text = "00:00"
+        binding.playbackTime.text = getString(R.string.duration_pl)
     }
 
     override fun onPlayerStart() {

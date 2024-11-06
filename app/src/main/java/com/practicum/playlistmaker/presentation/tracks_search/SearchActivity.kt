@@ -100,9 +100,7 @@ class SearchActivity : AppCompatActivity() {
         adapter = TracksAdapter()
         adapter.listener = TracksAdapter.OnTrackClickListener {track ->
             if(debounceClick()) {
-                historySearch.removeIf { it.trackId == track.trackId }
-                if(historySearch.size > 9) historySearch.removeLast()
-                historySearch.add(0, track)
+                historySearch = getHistoryInteractor.addtrackToHistory(historySearch, track)
                 getHistoryInteractor.saveHistory(historySearch)
                 adapter.notifyDataSetChanged()
                 val playerIntent = Intent(this, PlayerActivity::class.java)

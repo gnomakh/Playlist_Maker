@@ -17,6 +17,8 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
+        val settingsInteractor = Creator.provideSettingsInteractor()
+
         val backButton = findViewById<ImageView>(R.id.back_button)
         val shareButton = findViewById<LinearLayout>(R.id.share_button)
         val supportButton = findViewById<LinearLayout>(R.id.support_button)
@@ -30,7 +32,7 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitch.isChecked = Creator.provideSettingsInteractor().getDarkThemeState()
 
         themeSwitch.setOnCheckedChangeListener { switch, isChecked ->
-            Creator.provideSettingsInteractor().saveDarkThemeState(isChecked)
+            settingsInteractor.saveDarkThemeState(isChecked)
             (applicationContext as App).switchTheme(isChecked)
         }
 

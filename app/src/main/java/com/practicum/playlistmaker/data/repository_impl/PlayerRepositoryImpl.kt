@@ -10,6 +10,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
 
     private var mediaPlayer = MediaPlayer()
     private var playerState = DEFAULT_STATE
+    private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
 
     override fun preparePlayer(trackUrl: String, playerListener: PlayerListener) {
         mediaPlayer.setDataSource(trackUrl)
@@ -51,7 +52,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
     }
 
     override fun getCurrentTime() : String {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(mediaPlayer.currentPosition)
+        return dateFormat.format(mediaPlayer.currentPosition)
     }
 
     companion object {

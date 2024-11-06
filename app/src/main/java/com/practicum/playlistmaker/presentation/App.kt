@@ -9,17 +9,10 @@ class App : Application() {
 
     var darkTheme = false
 
-    companion object {
-        private lateinit var appInstance: App
-        fun getContext(): Context {
-            return appInstance.applicationContext
-        }
-    }
-
     override fun onCreate() {
         super.onCreate()
-        appInstance = this
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        Creator.initialize(this.applicationContext)
         darkTheme = Creator.provideSettingsInteractor().getDarkThemeState()
         switchTheme(darkTheme)
     }
