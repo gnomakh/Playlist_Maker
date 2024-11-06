@@ -37,15 +37,15 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/search_shape"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="12dp">
 
         <EditText
             android:id="@+id/inputSearch"
             style="@style/EditTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/search"
-            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/search_icon_et"
+            android:drawablePadding="10dp"
             android:hint="@string/search"
             android:imeOptions="actionDone"
             android:inputType="text"
@@ -59,7 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
+            android:paddingEnd="2dp"
             android:src="@drawable/cross"
+            app:tint="@color/searchContentColor"
             android:visibility="gone" />
     </FrameLayout>
 

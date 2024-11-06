@@ -1,9 +1,12 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.tracks_search
 
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.TrackItemBinding
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.menues.dpToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -13,7 +16,7 @@ class TracksHolder(private val trackItemBinding: TrackItemBinding) : RecyclerVie
     fun bind(model: Track) {
         trackItemBinding.trackName.text = model.trackName
         trackItemBinding.artistName.text = model.artistName
-        trackItemBinding.trackDuration.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+        trackItemBinding.trackDuration.text = model.trackTimeMillis
         val artwork = trackItemBinding.artworkCover
 
         Glide.with(itemView.context).load(model.artworkUrl100).placeholder(R.drawable.placeholder).fitCenter()

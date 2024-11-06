@@ -1,6 +1,5 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.presentation.menues
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -8,17 +7,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.switchmaterial.SwitchMaterial
-
-const val PREFS = "PREFS_KEY"
-const val SWITCH_KEY = "key_for_switch"
+import com.practicum.playlistmaker.presentation.App
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.creator.Creator
 
 class SettingsActivity : AppCompatActivity() {
-
-    var switchChecked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+
+        val settingsInteractor = Creator.provideSettingsInteractor()
 
         val backButton = findViewById<ImageView>(R.id.back_button)
         val shareButton = findViewById<LinearLayout>(R.id.share_button)
@@ -26,19 +25,15 @@ class SettingsActivity : AppCompatActivity() {
         val agreementButton = findViewById<LinearLayout>(R.id.agreement_button)
         val themeSwitch = findViewById<SwitchMaterial>(R.id.theme_switch)
 
-        val sharedPreferences = getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-
         backButton.setOnClickListener {
             finish()
         }
 
-        themeSwitch.isChecked = sharedPreferences.getBoolean(SWITCH_KEY, false)
+        themeSwitch.isChecked = Creator.provideSettingsInteractor().getDarkThemeState()
 
         themeSwitch.setOnCheckedChangeListener { switch, isChecked ->
-            switchChecked = isChecked
-            sharedPreferences.edit()
-                .putBoolean(SWITCH_KEY, isChecked).apply()
-            (applicationContext as App).switchTheme(switchChecked)
+            settingsInteractor.saveDarkThemeState(isChecked)
+            (applicationContext as App).switchTheme(isChecked)
         }
 
         shareButton.setOnClickListener {
