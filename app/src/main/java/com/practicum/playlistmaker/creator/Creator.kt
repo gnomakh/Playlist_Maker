@@ -2,24 +2,23 @@ package com.practicum.playlistmaker.creator
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.practicum.playlistmaker.presentation.App
-import com.practicum.playlistmaker.data.NetworkClient
-import com.practicum.playlistmaker.data.repository_impl.TrackRepositoryImpl
-import com.practicum.playlistmaker.data.network.RetrofitNetworkClient
-import com.practicum.playlistmaker.data.repository_impl.HistoryRepositoryImpl
-import com.practicum.playlistmaker.data.repository_impl.PlayerRepositoryImpl
-import com.practicum.playlistmaker.data.repository_impl.SettingsRepositoryImpl
-import com.practicum.playlistmaker.domain.repository.HistoryRepository
-import com.practicum.playlistmaker.domain.repository.PlayerRepository
-import com.practicum.playlistmaker.domain.repository.SettingsRepository
-import com.practicum.playlistmaker.domain.repository.TrackRepository
-import com.practicum.playlistmaker.domain.use_case.HistoryInteractor
-import com.practicum.playlistmaker.domain.use_case.PlayerInteractor
-import com.practicum.playlistmaker.domain.use_case.SettingsInteractor
-import com.practicum.playlistmaker.domain.use_case_impl.GetTracksUseCase
-import com.practicum.playlistmaker.domain.use_case_impl.HistoryInteractorImpl
-import com.practicum.playlistmaker.domain.use_case_impl.PlayerInteractorImpl
-import com.practicum.playlistmaker.domain.use_case_impl.SettingsInteractorImpl
+import com.practicum.playlistmaker.search.data.NetworkClient
+import com.practicum.playlistmaker.search.data.repository_impl.TrackRepositoryImpl
+import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
+import com.practicum.playlistmaker.search.data.repository_impl.HistoryRepositoryImpl
+import com.practicum.playlistmaker.player.data.PlayerRepositoryImpl
+import com.practicum.playlistmaker.settings.data.SettingsRepositoryImpl
+import com.practicum.playlistmaker.search.domain.api.HistoryRepository
+import com.practicum.playlistmaker.player.domain.api.PlayerRepository
+import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
+import com.practicum.playlistmaker.search.domain.api.TrackRepository
+import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
+import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
+import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
+import com.practicum.playlistmaker.search.domain.impl.GetTracksUseCase
+import com.practicum.playlistmaker.search.domain.impl.HistoryInteractorImpl
+import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
+import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
@@ -64,7 +63,7 @@ object Creator {
         return SettingsInteractorImpl(provideSettingsRepository())
     }
 
-    private fun provideSettingsRepository() : SettingsRepository{
+    private fun provideSettingsRepository() : SettingsRepository {
         return SettingsRepositoryImpl(context as Context)
     }
 }
