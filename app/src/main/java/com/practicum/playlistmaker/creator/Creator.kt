@@ -39,12 +39,12 @@ object Creator {
         return PlayerRepositoryImpl()
     }
 
-    fun provideHistoryInteractor() : HistoryInteractor {
-        return HistoryInteractorImpl(provideHistoryRepository())
+    fun provideHistoryInteractor(context: Context) : HistoryInteractor {
+        return HistoryInteractorImpl(provideHistoryRepository(context))
     }
 
-    private fun provideHistoryRepository() : HistoryRepository {
-        return HistoryRepositoryImpl(context as Context)
+    private fun provideHistoryRepository(context: Context) : HistoryRepository {
+        return HistoryRepositoryImpl(context)
     }
 
     fun provideGetTracksUseCase() : GetTracksUseCase {

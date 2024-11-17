@@ -1,12 +1,16 @@
 package com.practicum.playlistmaker.player.domain.api
 
-import com.practicum.playlistmaker.PlayerListener
+import com.practicum.playlistmaker.player.ui.state.PlaybackState
+
 
 interface PlayerInteractor {
-    fun preparePlayer(): Track
-    fun startPlayer(playerListener: PlayerListener)
-    fun pausePlayer(playerListener: PlayerListener)
+    fun preparePlayer(
+        trackUrl: String,
+        onPreparedListener: () -> Unit,
+        onCompletionListener: () -> Unit
+    )
+    fun startPlayer()
+    fun pausePlayer()
     fun getCurrentTime() : String
     fun releaseMediaPlayer()
-    fun playbackControl(playerListener: PlayerListener)
 }

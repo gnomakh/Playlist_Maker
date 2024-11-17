@@ -1,33 +1,23 @@
 package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.PlayerListener
 import com.practicum.playlistmaker.main.ui.dpToPx
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
+import com.practicum.playlistmaker.player.ui.state.PlaybackState
 
 class PlayerActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
-    private lateinit var trackOnPlayer: Track
-    private lateinit var timeUpdateRunnable: Runnable
-    private var handler: Handler? = null
-    private val playerInteractor = Creator.providePlayerInteractor()
-
-
     private lateinit var viewModel: PlayerViewModel
-
+    private lateinit var playerState: PlaybackState
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,35 +25,46 @@ class PlayerActivity : ComponentActivity() {
         binding = ActivityPlayerBinding.inflate(inflater)
         setContentView(binding.root)
 
-        handler = Handler(Looper.getMainLooper())
-        timeUpdateRunnable = createUpdateTimerRunnable()
-        viewModel = ViewModelProvider(this)[PlayerViewModel::class.java]
-
-        setTrackInfo()
-
         binding.backButton.setOnClickListener {
             finish()
         }
 
+        viewModel = ViewModelProvider(this)[PlayerViewModel::class.java]
 
-        val trackUrl = trackOnPlayer.previewUrl
-        setTrackInfo(trackOnPlayer)
-        playerInteractor.preparePlayer(trackUrl, this)
+        viewModel.getTrackInfoLiveData().observe(this) {
+            setTrackInfo(it)
+        }
+
         binding.playButton.setOnClickListener {
-            playerInteractor.playbackControl(this)
+            viewModel.playbackControl()
+        }
+
+        viewModel.getPlayerStateLiveData().observe(this) {
+            playerState = it
+            binding.playButton.setImageResource(
+                when(it) {
+                    PlaybackState.PLAYING_STATE -> R.drawable.pause_button
+                    PlaybackState.PAUSED_STATE -> R.drawable.play_button
+                    PlaybackState.PREPARED_STATE -> R.drawable.play_button
+                    PlaybackState.DEFAULT_STATE -> R.drawable.play_button
+                }
+            )
+        }
+
+        viewModel.getPlaybackTimeLiveData().observe(this) {
+            renderTimer(it)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        playerInteractor.pausePlayer(this)
-
+        viewModel.onActivityPause()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        handler?.removeCallbacksAndMessages(null)
-        playerInteractor.releaseMediaPlayer()
+    private fun renderTimer(currentTime: String) {
+        binding.playbackTime.text =
+            if (playerState != PlaybackState.PREPARED_STATE) currentTime
+            else getString(R.string.duration_pl)
     }
 
     private fun setTrackInfo(trackOnPlayer: Track) {
@@ -81,34 +82,5 @@ class PlayerActivity : ComponentActivity() {
             genrePl.text = trackOnPlayer.primaryGenreName
             countryPl.text = trackOnPlayer.country
         }
-    }
-
-    override fun onPlayerStop() {
-        binding.playButton.setImageResource(R.drawable.play_button)
-        handler?.removeCallbacks(timeUpdateRunnable)
-        binding.playbackTime.text = getString(R.string.duration_pl)
-    }
-
-    override fun onPlayerStart() {
-        binding.playButton.setImageResource(R.drawable.pause_button)
-        handler?.post(timeUpdateRunnable)
-    }
-
-    override fun onPlayerPause() {
-        handler?.removeCallbacks(timeUpdateRunnable)
-        binding.playButton.setImageResource(R.drawable.play_button)
-    }
-
-    private fun createUpdateTimerRunnable(): Runnable {
-        return object : Runnable {
-            override fun run() {
-                binding.playbackTime.text = playerInteractor.getCurrentTime()
-                handler?.postDelayed(this, TIMER_DELAY)
-            }
-        }
-    }
-
-    companion object {
-        private const val TIMER_DELAY = 333L
     }
 }

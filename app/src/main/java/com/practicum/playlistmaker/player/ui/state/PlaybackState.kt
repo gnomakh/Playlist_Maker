@@ -1,7 +1,8 @@
 package com.practicum.playlistmaker.player.ui.state
 
-sealed class PlaybackState {
-    object Playing: PlaybackState()
-    object Stop: PlaybackState()
-    object Pause: PlaybackState()
+enum class PlaybackState {
+    DEFAULT_STATE,
+    PREPARED_STATE,
+    PLAYING_STATE,
+    PAUSED_STATE
 }

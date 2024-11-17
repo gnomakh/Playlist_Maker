@@ -21,24 +21,22 @@ import com.practicum.playlistmaker.search.domain.consumer.TrackConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
+import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 import com.practicum.playlistmaker.search.ui.track.TracksAdapter
 
 class SearchActivity : ComponentActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
-    private val tracks = arrayListOf<Track>()
+    private var tracks = arrayListOf<Track>()
     private lateinit var historySearch: ArrayList<Track>
     private lateinit var adapter: TracksAdapter
-    private val getTracksUseCase = Creator.provideGetTracksUseCase()
-    private val getHistoryInteractor = Creator.provideHistoryInteractor()
 
     private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { searchRequest() }
 
     private var clickCurrentState = true
-    private var lastSearchQueue = ""
-    private var networkFailed = false
+    private var searchQueue = ""
+
 
     private val viewModel by lazy {
         ViewModelProvider(this)[SearchViewModel::class.java]
@@ -50,21 +48,32 @@ class SearchActivity : ComponentActivity() {
         binding = ActivitySearchBinding.inflate(inflater)
         setContentView(binding.root)
 
-        historySearch = getHistoryInteractor.getHistory()
-
         binding.backButton.setOnClickListener {
             finish()
         }
 
         binding.updateButton.setOnClickListener {
             binding.progressBar.isVisible = true
-            debounceRequest()
+            viewModel.debounceRequest(searchQueue)
         }
 
         binding.clearHistory.setOnClickListener {
             historySearch.clear()
-            getHistoryInteractor.clearHistory()
+            viewModel.clearHistory()
             toggleOffHistory()
+        }
+
+        historySearch = arrayListOf()
+        viewModel.getHistoryLiveData().observe(this) {
+            historySearch = it
+        }
+
+        viewModel.getSearchLiveData().observe(this) {
+            tracks = it
+        }
+
+        viewModel.getScreenStateLiveData().observe(this) {
+            render(it)
         }
 
         binding.clearButton.setOnClickListener {
@@ -90,16 +99,16 @@ class SearchActivity : ComponentActivity() {
             beforeTextChanged = { text: CharSequence?, start: Int, count: Int, after: Int -> },
             onTextChanged = { text: CharSequence?, start: Int, before: Int, count: Int ->
                 if (!text.isNullOrEmpty()) {
-                    if(networkFailed == false) lastSearchQueue = text.toString()
-                    debounceRequest()
+                    searchQueue = text.toString()
+                    viewModel.debounceRequest(searchQueue)
                 } else {
                     clearTrackList()
-                    handler.removeCallbacks(searchRunnable)
+                    viewModel.removeCallbacks()
                 }
                 if (binding.inputSearch.hasFocus() && text?.isEmpty() == true) {
-                    toggleOnHistory()
+                    viewModel.postState(SearchScreenState.History)
                 } else {
-                    toggleOffHistory()
+                    viewModel.postState(SearchScreenState.Nothing)
                 }
             },
             afterTextChanged = { text: Editable? -> }
@@ -108,8 +117,7 @@ class SearchActivity : ComponentActivity() {
         adapter = TracksAdapter()
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
             if(debounceClick()) {
-                historySearch = getHistoryInteractor.addtrackToHistory(historySearch, track)
-                getHistoryInteractor.saveHistory(historySearch)
+                viewModel.addTrackToHistory(track)
                 adapter.notifyDataSetChanged()
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent)
@@ -122,44 +130,33 @@ class SearchActivity : ComponentActivity() {
         binding.rvTracks.adapter = adapter
     }
 
-    private fun searchRequest() {
-        networkFailed = false
-        toggleOffPlaceholders()
-        binding.progressBar.isVisible = true
-        getTracksUseCase.execute(lastSearchQueue, object : TrackConsumer {
-            override fun onSuccess(response: ArrayList<Track>) {
-                runOnUiThread {
-                    showTracks(response)
-                }
+    private fun render(state: SearchScreenState) {
+        when(state) {
+            SearchScreenState.Loading -> showLoading()
+            SearchScreenState.Tracks -> showTracks()
+            SearchScreenState.History -> toggleOnHistory()
+            SearchScreenState.EmptyResult -> showErrorPlaceholder(ResponseCode.NO_RESULT)
+            SearchScreenState.NetwotkError -> showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
+            SearchScreenState.Nothing -> {
+                hideLoading()
+                toggleOffHistory()
+                toggleOffPlaceholders()
+                viewModel.clearTrackList()
             }
-
-            override fun onNoResult() {
-                runOnUiThread {
-                    binding.rvTracks.isVisible = false
-                    showErrorPlaceholder(ResponseCode.NO_RESULT)
-                }
-            }
-
-            override fun onNetworkError() {
-                networkFailed = true
-                runOnUiThread {
-                    showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
-                }
-            }
-        })
+        }
     }
 
-    fun showTracks(trackList: ArrayList<Track>) {
+    private fun showTracks() {
         toggleOffPlaceholders()
-        binding.progressBar.isVisible = false
+        hideLoading()
         binding.rvTracks.isVisible = true
-        adapter.trackList = trackList
+        adapter.trackList = tracks
         adapter.notifyDataSetChanged()
     }
 
-    fun showErrorPlaceholder(errorCode: ResponseCode) {
+    private fun showErrorPlaceholder(errorCode: ResponseCode) {
         toggleOffHistory()
-        binding.progressBar.isVisible = false
+        hideLoading()
         when(errorCode) {
             ResponseCode.NO_RESULT -> {
                 binding.searchPlaceholder.isVisible = true
@@ -170,13 +167,14 @@ class SearchActivity : ComponentActivity() {
         }
     }
 
-    fun toggleOffPlaceholders() {
+    private fun toggleOffPlaceholders() {
         binding.networkErrorPalceholder.isVisible = false
         binding.searchPlaceholder.isVisible = false
     }
 
     private fun toggleOnHistory() {
         toggleOffPlaceholders()
+        hideLoading()
         if (historySearch.isNotEmpty()) {
             binding.rvTracks.isVisible = true
             binding.youSearched.isVisible = true
@@ -194,13 +192,20 @@ class SearchActivity : ComponentActivity() {
     }
 
     private fun clearTrackList() {
-        tracks.clear()
+        viewModel.clearTrackList()
         adapter.notifyDataSetChanged()
     }
 
-    private fun debounceRequest() {
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+
+    private fun showLoading() {
+        binding.progressBar.isVisible = true
+        toggleOffHistory()
+        toggleOffPlaceholders()
+        viewModel.clearTrackList()
+    }
+
+    private fun hideLoading() {
+        binding.progressBar.isVisible = false
     }
 
     private fun debounceClick(): Boolean {
@@ -213,7 +218,6 @@ class SearchActivity : ComponentActivity() {
     }
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 

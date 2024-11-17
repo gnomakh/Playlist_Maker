@@ -1,46 +1,88 @@
 package com.practicum.playlistmaker.player.ui.ViewModel
 
+import android.app.Application
+import android.os.Handler
+import android.os.Looper
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
-import com.practicum.playlistmaker.player.ui.state.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
-import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 
-class PlayerViewModel(): ViewModel() {
+class PlayerViewModel(application: Application): AndroidViewModel(application) {
 
     private val playerInteractor = Creator.providePlayerInteractor()
+    private val historyInteractor = Creator.provideHistoryInteractor(getApplication())
+    private val handler = Handler(Looper.getMainLooper())
+    private val timeUpdateRunnable = createUpdateTimerRunnable()
 
-    private val trackOnPlayerLiveData = MutableLiveData<Track>()
-    fun getTrackOnPlayerLiveData(): LiveData<Track> = trackOnPlayerLiveData
+    val trackOnPlayer = historyInteractor.getHistory()[0]
 
-    private val playStatusLiveData = MutableLiveData<PlaybackState>()
-    fun getPlayStatusLiveData(): LiveData<PlaybackState> = playStatusLiveData
+    private val trackInfoLiveData = MutableLiveData<Track>()
+    fun getTrackInfoLiveData(): LiveData<Track> = trackInfoLiveData
+
+    private val playbackTimeLiveData = MutableLiveData<String>()
+    fun getPlaybackTimeLiveData(): LiveData<String> = playbackTimeLiveData
+
+    private var playerStateLiveData = MutableLiveData(PlaybackState.DEFAULT_STATE)
+    fun getPlayerStateLiveData(): LiveData<PlaybackState> = playerStateLiveData
 
     init {
+        trackInfoLiveData.postValue(trackOnPlayer)
         preparePlayer()
     }
 
-    fun preparePlayer() {
-        trackOnPlayerLiveData.value = playerInteractor.preparePlayer()
+    private fun preparePlayer() {
+        playerStateLiveData.postValue(PlaybackState.PREPARED_STATE)
+        playerInteractor.preparePlayer(
+            trackOnPlayer.previewUrl,
+            {
+                playerStateLiveData.postValue(PlaybackState.PREPARED_STATE)
+            },
+            {
+                playerStateLiveData.postValue(PlaybackState.PREPARED_STATE)
+            })
     }
 
+    private fun startPlayer() {
+        playerInteractor.startPlayer()
+        playerStateLiveData.postValue(PlaybackState.PLAYING_STATE)
+        handler.post(timeUpdateRunnable)
+    }
 
+    private fun pausePlayer() {
+        playerInteractor.pausePlayer()
+        playerStateLiveData.postValue(PlaybackState.PAUSED_STATE)
+        handler.removeCallbacks(timeUpdateRunnable)
+    }
 
-    companion object {
-        fun factory(): ViewModelProvider.Factory {
-            return viewModelFactory {
-                initializer {
-                    PlayerViewModel()
-                }
+    fun playbackControl() {
+        when(playerStateLiveData.value) {
+            PlaybackState.PLAYING_STATE -> pausePlayer()
+            PlaybackState.PAUSED_STATE, PlaybackState.PREPARED_STATE -> startPlayer()
+            PlaybackState.DEFAULT_STATE -> {}
+            null -> {}
+
+        }
+    }
+
+    fun onActivityPause() {
+        if(playerStateLiveData.value == PlaybackState.PLAYING_STATE) pausePlayer()
+    }
+
+    private fun createUpdateTimerRunnable(): Runnable {
+        return object : Runnable {
+            override fun run() {
+                playbackTimeLiveData.postValue(playerInteractor.getCurrentTime())
+                handler?.postDelayed(this, TIMER_DELAY)
             }
         }
+    }
+
+    companion object {
+        private const val TIMER_DELAY = 333L
+
     }
 }
 

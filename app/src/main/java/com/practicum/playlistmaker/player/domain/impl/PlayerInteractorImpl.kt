@@ -1,21 +1,28 @@
 package com.practicum.playlistmaker.player.domain.impl
 
-import com.practicum.playlistmaker.PlayerListener
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
-import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.player.ui.state.PlaybackState
 
 class PlayerInteractorImpl(val playerRepository : PlayerRepository) : PlayerInteractor {
-    override fun preparePlayer(): Track {
-        return playerRepository.preparePlayer()
+    override fun preparePlayer(
+        trackUrl: String,
+        onPreparedListener: () -> Unit,
+        onCompletionListener: () -> Unit
+    ) {
+        playerRepository.preparePlayer(
+            trackUrl,
+            onPreparedListener,
+            onCompletionListener
+        )
     }
 
-    override fun startPlayer(playerListener: PlayerListener) {
-        playerRepository.startPlayer(playerListener)
+    override fun startPlayer() {
+        playerRepository.startPlayer()
     }
 
-    override fun pausePlayer(playerListener: PlayerListener) {
-        playerRepository.pausePlayer(playerListener)
+    override fun pausePlayer() {
+        playerRepository.pausePlayer()
     }
 
     override fun getCurrentTime(): String {
@@ -24,10 +31,6 @@ class PlayerInteractorImpl(val playerRepository : PlayerRepository) : PlayerInte
 
     override fun releaseMediaPlayer() {
         playerRepository.releaseMediaPlayer()
-    }
-
-    override fun playbackControl(playerListener: PlayerListener) {
-        playerRepository.playbackControl(playerListener)
     }
 
 }
