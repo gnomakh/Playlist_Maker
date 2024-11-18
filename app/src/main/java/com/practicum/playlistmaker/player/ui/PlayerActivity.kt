@@ -2,7 +2,7 @@ package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -13,7 +13,7 @@ import com.practicum.playlistmaker.main.ui.dpToPx
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
 
-class PlayerActivity : ComponentActivity() {
+class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
     private lateinit var viewModel: PlayerViewModel
@@ -62,9 +62,7 @@ class PlayerActivity : ComponentActivity() {
     }
 
     private fun renderTimer(currentTime: String) {
-        binding.playbackTime.text =
-            if (playerState != PlaybackState.PREPARED_STATE) currentTime
-            else getString(R.string.duration_pl)
+        binding.playbackTime.text = currentTime
     }
 
     private fun setTrackInfo(trackOnPlayer: Track) {

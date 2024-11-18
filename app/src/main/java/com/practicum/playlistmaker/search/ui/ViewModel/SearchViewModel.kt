@@ -6,7 +6,7 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.search.domain.consumer.TrackConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
@@ -31,24 +31,26 @@ class SearchViewModel(application: Application): AndroidViewModel(application) {
     fun getScreenStateLiveData() : LiveData<SearchScreenState> = screenStateLiveData
 
     init {
-        historyLiveData.postValue(getHistoryInteractor.getHistory())
+        historyLiveData.setValue(getHistoryInteractor.getHistory())
     }
 
     fun postState(state: SearchScreenState) {
-        screenStateLiveData.postValue(state)
+        screenStateLiveData.setValue(state)
     }
 
     fun clearHistory() {
-        historyLiveData.postValue(arrayListOf())
+        getHistoryInteractor.clearHistory()
+        historyLiveData.setValue(arrayListOf())
     }
 
     fun addTrackToHistory(track: Track) {
-        getHistoryInteractor.addtrackToHistory(track)
-        historyLiveData.postValue(getHistoryInteractor.getHistory())
+        val historyList = historyLiveData.value ?: arrayListOf()
+        getHistoryInteractor.addtrackToHistory(historyList, track)
+        historyLiveData.setValue(getHistoryInteractor.getHistory())
     }
 
     fun clearTrackList() {
-        searchLiveData.postValue(arrayListOf())
+        searchLiveData.setValue(arrayListOf())
     }
 
     fun debounceRequest(searchInput: String) {
@@ -63,7 +65,7 @@ class SearchViewModel(application: Application): AndroidViewModel(application) {
 
     private fun searchRequest() {
         if(networkFailed == false) lastSearchQueue = currentSearchQueue
-        screenStateLiveData.postValue(SearchScreenState.Loading)
+        screenStateLiveData.setValue(SearchScreenState.Loading)
         networkFailed = false
         getTracksUseCase.execute(lastSearchQueue, object : TrackConsumer {
             override fun onSuccess(response: ArrayList<Track>) {

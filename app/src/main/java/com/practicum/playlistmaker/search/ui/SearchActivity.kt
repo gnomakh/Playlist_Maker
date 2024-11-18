@@ -8,23 +8,20 @@ import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practicum.playlistmaker.creator.Creator
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.search.domain.consumer.TrackConsumer
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 import com.practicum.playlistmaker.search.ui.track.TracksAdapter
 
-class SearchActivity : ComponentActivity() {
+class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -37,12 +34,13 @@ class SearchActivity : ComponentActivity() {
     private var clickCurrentState = true
     private var searchQueue = ""
 
-
     private val viewModel by lazy {
         ViewModelProvider(this)[SearchViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+
         super.onCreate(savedInstanceState)
         val inflater = LayoutInflater.from(this)
         binding = ActivitySearchBinding.inflate(inflater)
@@ -85,9 +83,9 @@ class SearchActivity : ComponentActivity() {
 
         binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus and binding.inputSearch.text.isEmpty()) {
-                toggleOnHistory()
+                viewModel.postState(SearchScreenState.History)
             } else {
-                toggleOffHistory()
+                viewModel.postState(SearchScreenState.Nothing)
             }
         }
 
@@ -118,6 +116,7 @@ class SearchActivity : ComponentActivity() {
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
             if(debounceClick()) {
                 viewModel.addTrackToHistory(track)
+                render(SearchScreenState.History)
                 adapter.notifyDataSetChanged()
                 val playerIntent = Intent(this, PlayerActivity::class.java)
                 startActivity(playerIntent)
@@ -148,6 +147,7 @@ class SearchActivity : ComponentActivity() {
 
     private fun showTracks() {
         toggleOffPlaceholders()
+        toggleOffHistory()
         hideLoading()
         binding.rvTracks.isVisible = true
         adapter.trackList = tracks
@@ -175,7 +175,8 @@ class SearchActivity : ComponentActivity() {
     private fun toggleOnHistory() {
         toggleOffPlaceholders()
         hideLoading()
-        if (historySearch.isNotEmpty()) {
+        historySearch = viewModel.getHistoryLiveData().value ?: arrayListOf()
+        if (historySearch.isNotEmpty() and tracks.isEmpty()) {
             binding.rvTracks.isVisible = true
             binding.youSearched.isVisible = true
             binding.clearHistory.isVisible = true

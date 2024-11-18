@@ -6,7 +6,7 @@ import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.practicum.playlistmaker.creator.Creator
+import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
 import com.practicum.playlistmaker.search.domain.models.Track
 
@@ -71,18 +71,27 @@ class PlayerViewModel(application: Application): AndroidViewModel(application) {
         if(playerStateLiveData.value == PlaybackState.PLAYING_STATE) pausePlayer()
     }
 
+    private fun postCurrentTime() {
+        playbackTimeLiveData.postValue(
+            if(playerStateLiveData.value == PlaybackState.PREPARED_STATE)
+            DEFAULT_TIME
+            else
+            playerInteractor.getCurrentTime()
+        )
+    }
+
     private fun createUpdateTimerRunnable(): Runnable {
         return object : Runnable {
             override fun run() {
-                playbackTimeLiveData.postValue(playerInteractor.getCurrentTime())
+                postCurrentTime()
                 handler?.postDelayed(this, TIMER_DELAY)
             }
         }
     }
 
     companion object {
-        private const val TIMER_DELAY = 333L
-
+        private const val TIMER_DELAY = 500L
+        private const val DEFAULT_TIME = "00:00"
     }
 }
 

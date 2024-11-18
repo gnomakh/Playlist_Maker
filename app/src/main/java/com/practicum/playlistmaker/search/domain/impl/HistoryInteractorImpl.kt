@@ -5,8 +5,8 @@ import com.practicum.playlistmaker.search.domain.api.HistoryRepository
 import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
 
 class HistoryInteractorImpl(val historyRepository: HistoryRepository) : HistoryInteractor {
-    override fun addtrackToHistory(track: Track) {
-        historyRepository.addTrackToHistory(track)
+    override fun addtrackToHistory(array: ArrayList<Track>, track: Track) {
+        historyRepository.addTrackToHistory(array, track)
     }
 
     override fun getHistory() : ArrayList<Track> {
