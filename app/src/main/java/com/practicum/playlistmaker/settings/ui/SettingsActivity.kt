@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
         val themeSwitch = findViewById<SwitchMaterial>(R.id.theme_switch)
 
 
-        viewModel = ViewModelProvider(this, SettingsViewModel.getViewModelFactory(this))[SettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
 
         backButton.setOnClickListener {
             finish()

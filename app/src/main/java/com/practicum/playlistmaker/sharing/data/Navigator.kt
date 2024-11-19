@@ -10,12 +10,14 @@ class Navigator(private val context: Context) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, context.getString(R.string.course_link))
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(shareIntent)
     }
     fun openLink() {
         val url = Uri.parse(context.getString(R.string.agreement_link))
         val agreementIntent = Intent(Intent.ACTION_VIEW, url)
+        agreementIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(agreementIntent)
     }
 
@@ -25,6 +27,7 @@ class Navigator(private val context: Context) {
             putExtra(Intent.EXTRA_EMAIL, arrayOf(context.getString(R.string.dev_email)))
             putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.email_subject))
             putExtra(Intent.EXTRA_TEXT, context.getString(R.string.email_text))
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(supportIntent)
     }

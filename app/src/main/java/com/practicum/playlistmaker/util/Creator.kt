@@ -26,12 +26,11 @@ import com.practicum.playlistmaker.sharing.domain.api.SharingInteractor
 @SuppressLint("StaticFieldLeak")
 object Creator {
 
-    private var context: Context? = null
+    private lateinit var context: Context
 
     fun initialize(context: Context) {
-        if (this.context == null) {
-            this.context = context.applicationContext
-        }
+        this.context = context.applicationContext
+
     }
 
     fun providePlayerInteractor() : PlayerInteractor {
@@ -67,10 +66,10 @@ object Creator {
     }
 
     private fun provideSettingsRepository() : SettingsRepository {
-        return SettingsRepositoryImpl(context as Context)
+        return SettingsRepositoryImpl(context)
     }
 
-    fun provideSharingInteractor(context: Context) : SharingInteractor {
+    fun provideSharingInteractor() : SharingInteractor {
         return SharingInteractorImpl(provideNavigator(context))
     }
 
