@@ -19,9 +19,6 @@ import com.practicum.playlistmaker.search.domain.impl.GetTracksUseCase
 import com.practicum.playlistmaker.search.domain.impl.HistoryInteractorImpl
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
-import com.practicum.playlistmaker.sharing.data.Navigator
-import com.practicum.playlistmaker.sharing.data.impl.SharingInteractorImpl
-import com.practicum.playlistmaker.sharing.domain.api.SharingInteractor
 
 @SuppressLint("StaticFieldLeak")
 object Creator {
@@ -67,13 +64,5 @@ object Creator {
 
     private fun provideSettingsRepository() : SettingsRepository {
         return SettingsRepositoryImpl(context)
-    }
-
-    fun provideSharingInteractor() : SharingInteractor {
-        return SharingInteractorImpl(provideNavigator(context))
-    }
-
-    private fun provideNavigator(context: Context) : Navigator {
-        return Navigator(context)
     }
 }

@@ -9,7 +9,7 @@ import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.settings.ui.ViewModel.SettingsViewModel
-import com.practicum.playlistmaker.sharing.domain.model.IntentState
+import com.practicum.playlistmaker.settings.domain.model.IntentState
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -53,5 +53,6 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun startActivityIfNonNull(intentType: IntentState) {
         viewModel.setIntentType(intentType)
+        startActivity(viewModel.getIntentState().value)
     }
 }

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.sharing.domain.model
+package com.practicum.playlistmaker.settings.domain.model
 
 enum class IntentState {
     SHARE,
