@@ -26,8 +26,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
 
     private var tracks = arrayListOf<Track>()
-    private lateinit var historySearch: ArrayList<Track>
-    private lateinit var adapter: TracksAdapter
+    private var historySearch: ArrayList<Track> = arrayListOf()
+    private val adapter: TracksAdapter = TracksAdapter()
 
     private val handler = Handler(Looper.getMainLooper())
 
@@ -61,7 +61,6 @@ class SearchActivity : AppCompatActivity() {
             toggleOffHistory()
         }
 
-        historySearch = arrayListOf()
         viewModel.getHistoryLiveData().observe(this) {
             historySearch = it
         }
@@ -112,7 +111,6 @@ class SearchActivity : AppCompatActivity() {
             afterTextChanged = { text: Editable? -> }
         )
 
-        adapter = TracksAdapter()
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
             if(debounceClick()) {
                 viewModel.addTrackToHistory(track)

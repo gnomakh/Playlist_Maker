@@ -29,7 +29,7 @@ class PlayerInteractorImpl(val playerRepository : PlayerRepository) : PlayerInte
     }
 
     override fun releaseMediaPlayer() {
-        playerRepository.releaseMediaPlayer()
+        playerRepository.releasePlayer()
     }
 
 }

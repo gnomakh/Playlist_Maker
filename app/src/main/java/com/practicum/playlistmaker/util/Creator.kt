@@ -70,11 +70,11 @@ object Creator {
         return SettingsRepositoryImpl(context as Context)
     }
 
-    fun provideSharingInteractor() : SharingInteractor {
-        return SharingInteractorImpl(provideNavigator())
+    fun provideSharingInteractor(context: Context) : SharingInteractor {
+        return SharingInteractorImpl(provideNavigator(context))
     }
 
-    private fun provideNavigator() : Navigator {
-        return Navigator(context as Context)
+    private fun provideNavigator(context: Context) : Navigator {
+        return Navigator(context)
     }
 }

@@ -26,7 +26,7 @@ class SettingsActivity : AppCompatActivity() {
         val themeSwitch = findViewById<SwitchMaterial>(R.id.theme_switch)
 
 
-        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this, SettingsViewModel.getViewModelFactory(this))[SettingsViewModel::class.java]
 
         backButton.setOnClickListener {
             finish()
@@ -35,7 +35,7 @@ class SettingsActivity : AppCompatActivity() {
         themeSwitch.isChecked = Creator.provideSettingsInteractor().getDarkThemeState()
 
         themeSwitch.setOnCheckedChangeListener { switch, isChecked ->
-            viewModel.switchTheme(isChecked)
+            viewModel.switchTheme(isChecked, application)
         }
 
         shareButton.setOnClickListener {
@@ -53,7 +53,5 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun startActivityIfNonNull(intentType: IntentState) {
         viewModel.setIntentType(intentType)
-        val currentIntent = viewModel.getIntent().value
-        if(currentIntent != null) startActivity(currentIntent)
     }
 }

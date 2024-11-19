@@ -9,5 +9,5 @@ interface PlayerRepository {
     fun startPlayer()
     fun pausePlayer()
     fun getCurrentTime() : String
-    fun releaseMediaPlayer()
+    fun releasePlayer()
 }

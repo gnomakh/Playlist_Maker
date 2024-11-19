@@ -35,7 +35,7 @@ class PlayerRepositoryImpl() : PlayerRepository {
     }
 
 
-    override fun releaseMediaPlayer() {
+    override fun releasePlayer() {
         mediaPlayer.release()
     }
 

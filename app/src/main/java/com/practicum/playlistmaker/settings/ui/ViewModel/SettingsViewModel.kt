@@ -1,32 +1,39 @@
 package com.practicum.playlistmaker.settings.ui.ViewModel
 
 import android.app.Application
-import android.content.Intent
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.content.Context
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.sharing.domain.model.IntentState
 import com.practicum.playlistmaker.util.App
 import com.practicum.playlistmaker.util.Creator
 
-class SettingsViewModel(application: Application): AndroidViewModel(application) {
+class SettingsViewModel(context: Context): ViewModel() {
 
     private val settingsInteractor = Creator.provideSettingsInteractor()
-    private val sharingInteractor = Creator.provideSharingInteractor()
+    private val sharingInteractor = Creator.provideSharingInteractor(context)
 
-    private val intentState = MutableLiveData<Intent>()
-    fun getIntent() : LiveData<Intent> = intentState
 
-    fun switchTheme(isChecked: Boolean) {
+    fun switchTheme(isChecked: Boolean, application: Application) {
         settingsInteractor.saveDarkThemeState(isChecked)
-        (getApplication() as App).switchTheme(isChecked)
+        (application as App).switchTheme(isChecked)
     }
 
     fun setIntentType(type: IntentState) {
         when(type) {
-            IntentState.SHARE -> intentState.setValue(sharingInteractor.share())
-            IntentState.SEND_EMAIL -> intentState.setValue(sharingInteractor.sendEmail())
-            IntentState.OPEN_TERMS -> intentState.setValue(sharingInteractor.openTerms())
+            IntentState.SHARE -> sharingInteractor.share()
+            IntentState.SEND_EMAIL -> sharingInteractor.sendEmail()
+            IntentState.OPEN_TERMS -> sharingInteractor.openTerms()
+        }
+    }
+
+    companion object {
+        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                SettingsViewModel(context)
+            }
         }
     }
 
