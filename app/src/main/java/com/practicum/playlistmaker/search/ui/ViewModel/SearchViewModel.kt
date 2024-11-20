@@ -1,19 +1,19 @@
 package com.practicum.playlistmaker.search.ui.ViewModel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.practicum.playlistmaker.util.Creator
+import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.search.domain.consumer.TrackConsumer
+import com.practicum.playlistmaker.search.domain.impl.GetTracksUseCase
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 
-class SearchViewModel(application: Application): AndroidViewModel(application) {
-    private val getTracksUseCase = Creator.provideGetTracksUseCase()
-    private val getHistoryInteractor = Creator.provideHistoryInteractor(getApplication())
+class SearchViewModel(
+    val getTracksUseCase: GetTracksUseCase,
+    val getHistoryInteractor: HistoryInteractor): ViewModel() {
 
     private var lastSearchQueue = ""
     private var currentSearchQueue = ""

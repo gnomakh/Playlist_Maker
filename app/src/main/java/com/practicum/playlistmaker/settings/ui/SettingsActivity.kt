@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.util.Creator
 import com.practicum.playlistmaker.settings.ui.ViewModel.SettingsViewModel
 import com.practicum.playlistmaker.settings.domain.model.IntentState
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,17 +24,14 @@ class SettingsActivity : AppCompatActivity() {
         val agreementButton = findViewById<LinearLayout>(R.id.agreement_button)
         val themeSwitch = findViewById<SwitchMaterial>(R.id.theme_switch)
 
-
-        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-
         backButton.setOnClickListener {
             finish()
         }
 
-        themeSwitch.isChecked = Creator.provideSettingsInteractor().getDarkThemeState()
+        themeSwitch.isChecked = viewModel.getSwitchState()
 
         themeSwitch.setOnCheckedChangeListener { switch, isChecked ->
-            viewModel.switchTheme(isChecked, application)
+            viewModel.switchTheme(isChecked)
         }
 
         shareButton.setOnClickListener {
