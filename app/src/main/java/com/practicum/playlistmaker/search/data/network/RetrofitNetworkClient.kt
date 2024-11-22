@@ -6,8 +6,6 @@ import com.practicum.playlistmaker.search.data.dto.SearchRequest
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
-
 class RetrofitNetworkClient : NetworkClient {
 
     private val retrofit =

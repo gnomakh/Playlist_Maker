@@ -5,11 +5,9 @@ import com.practicum.playlistmaker.player.domain.api.PlayerRepository
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class PlayerRepositoryImpl() : PlayerRepository {
+class PlayerRepositoryImpl(var mediaPlayer: MediaPlayer) : PlayerRepository {
 
-    private var mediaPlayer = MediaPlayer()
     private val dateFormat by lazy { SimpleDateFormat("mm:ss", Locale.getDefault()) }
-
 
     override fun preparePlayer(
         trackUrl: String,
@@ -33,7 +31,6 @@ class PlayerRepositoryImpl() : PlayerRepository {
     override fun pausePlayer() {
         mediaPlayer.pause()
     }
-
 
     override fun releasePlayer() {
         mediaPlayer.release()

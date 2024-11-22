@@ -1,19 +1,20 @@
 package com.practicum.playlistmaker.player.ui.ViewModel
 
-import android.app.Application
 import android.os.Handler
 import android.os.Looper
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.practicum.playlistmaker.util.Creator
+import androidx.lifecycle.ViewModel
+import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
+import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
 
-class PlayerViewModel(application: Application): AndroidViewModel(application) {
+class PlayerViewModel(
+    val playerInteractor: PlayerInteractor,
+    val historyInteractor: HistoryInteractor
+    ): ViewModel() {
 
-    private val playerInteractor = Creator.providePlayerInteractor()
-    private val historyInteractor = Creator.provideHistoryInteractor(getApplication())
     private val handler = Handler(Looper.getMainLooper())
     private val timeUpdateRunnable = createUpdateTimerRunnable()
 

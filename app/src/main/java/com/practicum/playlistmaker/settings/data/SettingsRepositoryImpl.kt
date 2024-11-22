@@ -1,22 +1,20 @@
 package com.practicum.playlistmaker.settings.data
 
-import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
 
-class SettingsRepositoryImpl(context: Context) : SettingsRepository {
-
-    private val sharedPreferences = context.getSharedPreferences(PREFS_KEY, Application.MODE_PRIVATE)
+class SettingsRepositoryImpl(val sharedPref: SharedPreferences) : SettingsRepository {
 
     override fun saveDarkThemeState(themeState: Boolean) {
-        sharedPreferences.edit().putBoolean(PREFS_KEY, themeState).apply()
+        sharedPref.edit().putBoolean(THEME_PREFS_KEY, themeState).apply()
     }
 
     override fun getDarkThemeState() : Boolean {
-        return sharedPreferences.getBoolean(PREFS_KEY, false)
+        return sharedPref.getBoolean(THEME_PREFS_KEY, false)
     }
 
     companion object {
-        private const val PREFS_KEY = "prefs_key"
+        const val THEME_PREFS_KEY = "theme_prefs_key"
     }
 }
