@@ -27,4 +27,8 @@
     <color name="trackDetailsColor">#AEAFB4</color>
 
     <color name="progressBarColor">#3772E7</color>
+
+    <color name="tabTextColor">#1A1B22</color>
+
+    <color name="tabBackground">#FFFFFFFF</color>
 </resources>

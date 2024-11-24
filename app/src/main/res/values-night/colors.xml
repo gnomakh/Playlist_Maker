@@ -21,4 +21,8 @@
     <color name="roundedButtonTextColor">#1A1B22</color>
 
     <color name="addAndLikeButtonsColor">#40FFFFFF</color>
+
+    <color name="tabTextColor">#FFFFFFFF</color>
+
+    <color name="tabBackground">#1A1B22</color>
 </resources>
