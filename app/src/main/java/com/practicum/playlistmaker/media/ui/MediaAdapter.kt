@@ -16,8 +16,8 @@ class MediaAdapter (
 
         override fun createFragment(position: Int): Fragment {
             return when(position) {
-                0 -> FavoritesFragment.newInstance(1)
-                else -> PlaylistsFragment.newInstance(2)
+                0 -> FavoritesFragment.newInstance()
+                else -> PlaylistsFragment.newInstance()
             }
         }
 }
