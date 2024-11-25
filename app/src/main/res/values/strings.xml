@@ -4,6 +4,10 @@
     <string name="media">Медиатека</string>
     <string name="settings">Настройки</string>
 
+    <string name="menu_search">Поиск</string>
+    <string name="menu_media">Медиатека</string>
+    <string name="menu_settings">Настройки</string>
+
     <string name="night_mode">Темная тема</string>
     <string name="share">Поделиться приложением</string>
     <string name="support">Написать в поддержку</string>

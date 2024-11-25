@@ -8,7 +8,7 @@ import com.practicum.playlistmaker.di.*
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.android.inject
 
-class App() : Application() {
+class App : Application() {
 
     private var darkTheme = false
 
@@ -29,7 +29,6 @@ class App() : Application() {
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
-        darkTheme = darkThemeEnabled
         AppCompatDelegate.setDefaultNightMode(
             if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES

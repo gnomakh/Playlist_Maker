@@ -5,30 +5,13 @@
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
     android:orientation="vertical"
-    tools:ignore="ExtraText">
+    tools:ignore="ExtraText"
+    tools:context="com.practicum.playlistmaker.settings.ui.SettingsFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_marginTop="18dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="28dp"
-            android:id="@+id/back_button"
-            style="@style/BackArrow"
-            android:src="@drawable/arrow_back"/>
-
-        <TextView
-            android:paddingVertical="14dp"
-            style="@style/HeadingTextStyle"
-            android:text="@string/settings" />
-
-    </LinearLayout>
+    <TextView
+        android:padding="16dp"
+        style="@style/HeadingTextStyle"
+        android:text="@string/settings" />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/theme_switch"

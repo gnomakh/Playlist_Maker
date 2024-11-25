@@ -134,4 +134,8 @@
         <item name="android:fontWeight">500</item>
     </style>
 
+    <style name="bottomNavStyle">
+        <item name="backgroundTint">@color/backgroundColor</item>
+    </style>
+
 </resources>

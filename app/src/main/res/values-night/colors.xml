@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mainMenuBackground">#1A1B22</color>
     <color name="mainHeadingTextColor">#FFFFFFFF</color>
     <color name="mainMenuButtonColor">#FFFFFFFF</color>
 

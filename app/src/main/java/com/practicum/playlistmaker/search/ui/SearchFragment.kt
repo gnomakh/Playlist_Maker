@@ -1,29 +1,28 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Context
-import android.content.Intent
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.player.ui.PlayerActivity
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 import com.practicum.playlistmaker.search.ui.track.TracksAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivitySearchBinding
+class SearchFragment : Fragment() {
 
     private var tracks = arrayListOf<Track>()
     private var historySearch: ArrayList<Track> = arrayListOf()
@@ -36,17 +35,19 @@ class SearchActivity : AppCompatActivity() {
 
     private val viewModel: SearchViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private lateinit var binding: FragmentSearchBinding
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        super.onCreate(savedInstanceState)
-        val inflater = LayoutInflater.from(this)
-        binding = ActivitySearchBinding.inflate(inflater)
-        setContentView(binding.root)
-
-        binding.backButton.setOnClickListener {
-            finish()
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.updateButton.setOnClickListener {
             binding.progressBar.isVisible = true
@@ -59,23 +60,23 @@ class SearchActivity : AppCompatActivity() {
             toggleOffHistory()
         }
 
-        viewModel.getHistoryLiveData().observe(this) {
+        viewModel.getHistoryLiveData().observe(viewLifecycleOwner) {
             historySearch = it
         }
 
-        viewModel.getSearchLiveData().observe(this) {
+        viewModel.getSearchLiveData().observe(viewLifecycleOwner) {
             tracks = it
         }
 
-        viewModel.getScreenStateLiveData().observe(this) {
+        viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
         binding.clearButton.setOnClickListener {
             binding.inputSearch.text.clear()
             clearTrackList()
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            imm?.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+            val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
+            imm?.hideSoftInputFromWindow(it.windowToken, 0)
         }
 
         binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
@@ -109,19 +110,18 @@ class SearchActivity : AppCompatActivity() {
             afterTextChanged = { text: Editable? -> }
         )
 
+        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
             if(debounceClick()) {
                 viewModel.addTrackToHistory(track)
                 render(SearchScreenState.History)
                 adapter.notifyDataSetChanged()
-                val playerIntent = Intent(this, PlayerActivity::class.java)
-                startActivity(playerIntent)
+                navController.navigate(R.id.action_searchFragment_to_playerActivity)
             }
         }
         adapter.trackList = tracks
-
-        binding.rvTracks.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvTracks.adapter = adapter
     }
 
