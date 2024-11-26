@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.settings.data
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
 
@@ -10,7 +9,7 @@ class SettingsRepositoryImpl(val sharedPref: SharedPreferences) : SettingsReposi
         sharedPref.edit().putBoolean(THEME_PREFS_KEY, themeState).apply()
     }
 
-    override fun getDarkThemeState() : Boolean {
+    override fun getDarkThemeState(): Boolean {
         return sharedPref.getBoolean(THEME_PREFS_KEY, false)
     }
 

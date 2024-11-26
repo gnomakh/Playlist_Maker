@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 class FavoritesViewModel : ViewModel() {
 
     private val favorites: MutableLiveData<Any>? = null
-    fun getFavorites() : LiveData<Any>? {
+    fun getFavorites(): LiveData<Any>? {
         return favorites
     }
 

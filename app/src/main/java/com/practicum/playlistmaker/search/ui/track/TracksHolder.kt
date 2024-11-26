@@ -6,7 +6,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.TrackItemBinding
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.main.ui.dpToPx
+import com.practicum.playlistmaker.root.dpToPx
 
 
 class TracksHolder(private val trackItemBinding: TrackItemBinding) : RecyclerView.ViewHolder(trackItemBinding.root) {

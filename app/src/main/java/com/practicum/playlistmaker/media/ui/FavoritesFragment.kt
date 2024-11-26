@@ -15,8 +15,10 @@ class FavoritesFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: FavoritesViewModel by viewModel()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }

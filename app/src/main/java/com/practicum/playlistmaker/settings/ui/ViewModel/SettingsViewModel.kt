@@ -11,14 +11,15 @@ import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.model.IntentState
 import com.practicum.playlistmaker.util.App
 
-class SettingsViewModel(val application: Application, val settingsInteractor: SettingsInteractor): ViewModel() {
+class SettingsViewModel(val application: Application, val settingsInteractor: SettingsInteractor) :
+    ViewModel() {
 
     private val intentState = MutableLiveData<Intent>()
-    fun getIntentState() : LiveData<Intent> {
+    fun getIntentState(): LiveData<Intent> {
         return intentState
     }
 
-    fun getSwitchState() : Boolean = settingsInteractor.getDarkThemeState()
+    fun getSwitchState(): Boolean = settingsInteractor.getDarkThemeState()
 
     fun switchTheme(isChecked: Boolean) {
         settingsInteractor.getDarkThemeState()
@@ -27,7 +28,7 @@ class SettingsViewModel(val application: Application, val settingsInteractor: Se
     }
 
     fun setIntentType(type: IntentState) {
-        when(type) {
+        when (type) {
             IntentState.SHARE -> shareLink()
             IntentState.SEND_EMAIL -> openEmail()
             IntentState.OPEN_TERMS -> openLink()
@@ -42,6 +43,7 @@ class SettingsViewModel(val application: Application, val settingsInteractor: Se
         intentState.setValue(shareIntent)
 
     }
+
     fun openLink() {
         val url = Uri.parse(application.getString(R.string.agreement_link))
         val agreementIntent = Intent(Intent.ACTION_VIEW, url)

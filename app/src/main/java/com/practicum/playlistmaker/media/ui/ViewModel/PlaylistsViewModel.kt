@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class PlaylistsViewModel : ViewModel() {
     private val playlists: MutableLiveData<Any>? = null
-    fun getPlaylists() : LiveData<Any>? {
+    fun getPlaylists(): LiveData<Any>? {
         return playlists
     }
 }

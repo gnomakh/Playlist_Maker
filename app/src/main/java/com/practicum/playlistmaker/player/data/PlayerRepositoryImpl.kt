@@ -14,7 +14,7 @@ class PlayerRepositoryImpl(var mediaPlayer: MediaPlayer) : PlayerRepository {
         onPreparedListener: () -> Unit,
         onCompletionListener: () -> Unit
     ) {
-        if(trackUrl != "No previewUrl") {
+        if (trackUrl != "No previewUrl") {
             mediaPlayer = mediaPlayer.apply {
                 setDataSource(trackUrl)
                 prepareAsync()
@@ -36,7 +36,7 @@ class PlayerRepositoryImpl(var mediaPlayer: MediaPlayer) : PlayerRepository {
         mediaPlayer.release()
     }
 
-    override fun getCurrentTime() : String {
+    override fun getCurrentTime(): String {
         return dateFormat.format(mediaPlayer.currentPosition)
     }
 

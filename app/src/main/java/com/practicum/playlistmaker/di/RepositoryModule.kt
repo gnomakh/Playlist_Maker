@@ -26,7 +26,7 @@ val repositoryModule = module {
     }
 
     single<SettingsRepository> {
-        SettingsRepositoryImpl(sharedPref =  get(named("themePrefs")))
+        SettingsRepositoryImpl(sharedPref = get(named("themePrefs")))
     }
 }
 

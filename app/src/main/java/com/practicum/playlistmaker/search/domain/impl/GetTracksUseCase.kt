@@ -18,7 +18,7 @@ class GetTracksUseCase(private val trackRepository: TrackRepository) {
                 } else {
                     consumer.onNoResult()
                 }
-            } catch (e : Exception) {
+            } catch (e: Exception) {
                 consumer.onNetworkError()
             }
         }
