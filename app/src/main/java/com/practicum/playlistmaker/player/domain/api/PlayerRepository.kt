@@ -6,8 +6,9 @@ interface PlayerRepository {
         onPreparedListener: () -> Unit,
         onCompletionListener: () -> Unit
     )
+
     fun startPlayer()
     fun pausePlayer()
-    fun getCurrentTime() : String
+    fun getCurrentTime(): String
     fun releasePlayer()
 }

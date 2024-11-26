@@ -10,7 +10,7 @@ import java.util.Locale
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 
-    override fun searchTracks(expression: String) : List<Track>{
+    override fun searchTracks(expression: String): List<Track> {
         var response = networkClient.doRequest(SearchRequest(expression))
         if (response.resultCode == 200) {
             return ((response as SearchResponse).results.map {

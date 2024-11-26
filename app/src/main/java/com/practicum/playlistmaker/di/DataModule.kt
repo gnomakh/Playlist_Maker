@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import com.google.gson.Gson
-import com.practicum.playlistmaker.search.data.*
+import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
 import com.practicum.playlistmaker.search.data.repository_impl.HistoryRepositoryImpl.Companion.HISTORY_PREFS_KEY

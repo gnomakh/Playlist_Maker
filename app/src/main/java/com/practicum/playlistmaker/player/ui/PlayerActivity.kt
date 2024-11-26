@@ -7,10 +7,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.root.dpToPx
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
+import com.practicum.playlistmaker.root.dpToPx
+import com.practicum.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
@@ -38,7 +38,7 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.getPlayerStateLiveData().observe(this) {
             binding.playButton.setImageResource(
-                when(it) {
+                when (it) {
                     PlaybackState.PLAYING_STATE -> R.drawable.pause_button
                     PlaybackState.PAUSED_STATE -> R.drawable.play_button
                     PlaybackState.PREPARED_STATE -> R.drawable.play_button
@@ -62,9 +62,10 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun setTrackInfo(trackOnPlayer: Track) {
-        Glide.with(this).load(trackOnPlayer.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg")).placeholder(
-            R.drawable.placeholder_player
-        ).fitCenter()
+        Glide.with(this).load(trackOnPlayer.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg"))
+            .placeholder(
+                R.drawable.placeholder_player
+            ).fitCenter()
             .transform(RoundedCorners(this.dpToPx(8.0F))).into(binding.artworkCover)
         with(binding) {
             trackName.text = trackOnPlayer.trackName

@@ -47,12 +47,12 @@
                 android:maxLines="1"
                 android:text="@string/text_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/image_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/image_view"
                 android:layout_width="3dp"
                 android:layout_height="3dp"
                 android:layout_gravity="center_vertical"
@@ -73,8 +73,8 @@
                 android:maxLines="1"
                 android:text="@string/text_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/imageView"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintEnd_toStartOf="@+id/image_view"
+                app:layout_constraintStart_toEndOf="@+id/image_view"
                 app:layout_constraintTop_toTopOf="parent" />
 
 

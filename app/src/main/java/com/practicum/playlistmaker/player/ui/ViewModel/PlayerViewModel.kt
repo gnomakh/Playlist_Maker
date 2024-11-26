@@ -13,7 +13,7 @@ import com.practicum.playlistmaker.search.domain.models.Track
 class PlayerViewModel(
     val playerInteractor: PlayerInteractor,
     val historyInteractor: HistoryInteractor
-    ): ViewModel() {
+) : ViewModel() {
 
     private val handler = Handler(Looper.getMainLooper())
     private val timeUpdateRunnable = createUpdateTimerRunnable()
@@ -59,7 +59,7 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
-        when(playerStateLiveData.value) {
+        when (playerStateLiveData.value) {
             PlaybackState.PLAYING_STATE -> pausePlayer()
             PlaybackState.PAUSED_STATE, PlaybackState.PREPARED_STATE -> startPlayer()
             PlaybackState.DEFAULT_STATE -> {}
@@ -69,15 +69,15 @@ class PlayerViewModel(
     }
 
     fun onActivityPause() {
-        if(playerStateLiveData.value == PlaybackState.PLAYING_STATE) pausePlayer()
+        if (playerStateLiveData.value == PlaybackState.PLAYING_STATE) pausePlayer()
     }
 
     private fun postCurrentTime() {
         playbackTimeLiveData.postValue(
-            if(playerStateLiveData.value == PlaybackState.PREPARED_STATE)
-            DEFAULT_TIME
+            if (playerStateLiveData.value == PlaybackState.PREPARED_STATE)
+                DEFAULT_TIME
             else
-            playerInteractor.getCurrentTime()
+                playerInteractor.getCurrentTime()
         )
     }
 

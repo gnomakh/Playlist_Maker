@@ -2,11 +2,14 @@ package com.practicum.playlistmaker.util
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.GlobalContext.startKoin
-import com.practicum.playlistmaker.di.*
+import com.practicum.playlistmaker.di.dataModule
+import com.practicum.playlistmaker.di.interactorModule
+import com.practicum.playlistmaker.di.repositoryModule
+import com.practicum.playlistmaker.di.viewModelModule
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
 class App : Application() {
 

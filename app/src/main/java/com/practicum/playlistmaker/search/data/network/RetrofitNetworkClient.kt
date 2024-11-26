@@ -27,6 +27,7 @@ class RetrofitNetworkClient : NetworkClient {
             return Response().apply { resultCode = 400 }
         }
     }
+
     companion object {
         const val tracksBaseUrl = "https://itunes.apple.com"
     }

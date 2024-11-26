@@ -6,28 +6,31 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.practicum.playlistmaker.databinding.FragmentSettingsBinding
-import com.practicum.playlistmaker.settings.ui.ViewModel.SettingsViewModel
 import com.practicum.playlistmaker.settings.domain.model.IntentState
+import com.practicum.playlistmaker.settings.ui.ViewModel.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModel()
 
-    private lateinit var binding: FragmentSettingsBinding
+    private var _binding: FragmentSettingsBinding? = null
+    private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         binding.themeSwitch.setOnCheckedChangeListener(null)
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,7 +47,7 @@ class SettingsFragment : Fragment() {
         }
 
         binding.supportButton.setOnClickListener {
-           startIfNonNull(IntentState.SEND_EMAIL)
+            startIfNonNull(IntentState.SEND_EMAIL)
         }
 
         binding.agreementButton.setOnClickListener {

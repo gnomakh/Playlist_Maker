@@ -21,10 +21,11 @@ class RootActivity : AppCompatActivity() {
         binding = ActivityRootBinding.inflate(inflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
-        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         bottomNavMenu.setupWithNavController(navController)
 
     }

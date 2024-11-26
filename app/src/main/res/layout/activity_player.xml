@@ -7,7 +7,7 @@
     tools:context=".player.ui.PlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/leftBorder"
+        android:id="@+id/left_border"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -38,7 +38,7 @@
         android:layout_marginTop="82dp"
         app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -50,7 +50,9 @@
         android:text="TN"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toTopOf="@id/artist_name"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintTop_toBottomOf="@id/artwork_cover" />
 
     <TextView
@@ -61,7 +63,9 @@
         android:layout_marginTop="12dp"
         android:text="AN"
         app:layout_constrainedWidth="true"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintEnd_toStartOf="@id/rightBorder"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toBottomOf="@id/track_name" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -81,7 +85,7 @@
         app:layout_constraintBottom_toBottomOf="@id/play_button"
         app:layout_constraintEnd_toStartOf="@id/play_button"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/play_button" />
 
     <ImageButton
@@ -93,7 +97,7 @@
         app:layout_constraintBottom_toTopOf="@id/barrier_bottom"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toBottomOf="@id/barrier"
         android:layout_marginBottom="16dp"
         app:tint="@color/trackNameColor" />
@@ -113,13 +117,13 @@
 
     <TextView
         android:id="@+id/playback_time"
-        style="@style/HeadingTextStyle"
+        style="@style/PlaybackTimeStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0:30"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toBottomOf="@id/play_button" />
 
     <androidx.constraintlayout.widget.Barrier
@@ -136,52 +140,52 @@
         android:layout_height="wrap_content"
         android:text="@string/durationText"
         app:layout_constraintBottom_toBottomOf="@id/duration_pl"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/duration_pl" />
 
     <TextView
-        android:id="@+id/albumText"
+        android:id="@+id/album_text"
         style="@style/trackDetailsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/albumText"
         app:layout_constraintBottom_toBottomOf="@id/album_pl"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/album_pl"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/yearText"
+        android:id="@+id/year_text"
         style="@style/trackDetailsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/yearText"
         app:layout_constraintBottom_toBottomOf="@id/year_pl"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/year_pl" />
 
     <TextView
-        android:id="@+id/genreText"
+        android:id="@+id/genre_text"
         style="@style/trackDetailsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/genreText"
         app:layout_constraintBottom_toBottomOf="@id/genre_pl"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/genre_pl" />
 
     <TextView
-        android:id="@+id/countryText"
+        android:id="@+id/country_text"
         style="@style/trackDetailsStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/countryText"
         app:layout_constraintBottom_toBottomOf="@id/country_pl"
-        app:layout_constraintStart_toEndOf="@id/leftBorder"
+        app:layout_constraintStart_toEndOf="@id/left_border"
         app:layout_constraintTop_toTopOf="@id/country_pl" />
 
     <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/centerLine"
+        android:id="@+id/center_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -210,7 +214,7 @@
         app:layout_constraintBottom_toTopOf="@id/year_pl"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@id/centerLine"
+        app:layout_constraintStart_toEndOf="@id/center_line"
         app:layout_constraintTop_toBottomOf="@id/duration_pl" />
 
     <TextView
