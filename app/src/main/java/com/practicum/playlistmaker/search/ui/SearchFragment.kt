@@ -13,6 +13,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
@@ -20,6 +21,8 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 import com.practicum.playlistmaker.search.ui.track.TracksAdapter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -27,8 +30,6 @@ class SearchFragment : Fragment() {
     private var tracks = arrayListOf<Track>()
     private var historySearch: ArrayList<Track> = arrayListOf()
     private val adapter: TracksAdapter = TracksAdapter()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private var clickCurrentState = true
     private var searchQueue = ""
@@ -100,7 +101,6 @@ class SearchFragment : Fragment() {
                     viewModel.debounceRequest(searchQueue)
                 } else {
                     clearTrackList()
-                    viewModel.removeCallbacks()
                 }
                 if (binding.inputSearch.hasFocus() && text?.isEmpty() == true) {
                     viewModel.postState(SearchScreenState.History)
@@ -212,10 +212,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun debounceClick(): Boolean {
-        var isClickAllowed = clickCurrentState
+        val isClickAllowed = clickCurrentState
         if (clickCurrentState) {
             clickCurrentState = false
-            handler.postDelayed({ clickCurrentState = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                clickCurrentState = true
+            }
         }
         return isClickAllowed
     }
