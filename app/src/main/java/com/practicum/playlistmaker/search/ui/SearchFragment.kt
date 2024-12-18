@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -75,7 +73,7 @@ class SearchFragment : Fragment() {
         }
 
         binding.clearButton.setOnClickListener {
-            binding.inputSearch.text.clear()
+            binding.inputSearch.setText("")
             clearTrackList()
             val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(it.windowToken, 0)
@@ -111,11 +109,12 @@ class SearchFragment : Fragment() {
             afterTextChanged = { text: Editable? -> }
         )
 
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
+        val navHostFragment =
+            activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
-            if(debounceClick()) {
+            if (debounceClick()) {
                 viewModel.addTrackToHistory(track)
                 render(SearchScreenState.History)
                 adapter.notifyDataSetChanged()
@@ -132,7 +131,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun render(state: SearchScreenState) {
-        when(state) {
+        when (state) {
             SearchScreenState.Loading -> showLoading()
             SearchScreenState.Tracks -> showTracks()
             SearchScreenState.History -> toggleOnHistory()
@@ -159,10 +158,11 @@ class SearchFragment : Fragment() {
     private fun showErrorPlaceholder(errorCode: ResponseCode) {
         toggleOffHistory()
         hideLoading()
-        when(errorCode) {
+        when (errorCode) {
             ResponseCode.NO_RESULT -> {
                 binding.searchPlaceholder.isVisible = true
             }
+
             ResponseCode.NETWORK_ERROR -> {
                 binding.networkErrorPalceholder.isVisible = true
             }
@@ -196,6 +196,11 @@ class SearchFragment : Fragment() {
 
     private fun clearTrackList() {
         viewModel.clearTrackList()
+        if (historySearch.isEmpty()) {
+            viewModel.postState(SearchScreenState.Nothing)
+        } else {
+            viewModel.postState(SearchScreenState.History)
+        }
         adapter.notifyDataSetChanged()
     }
 
@@ -227,5 +232,5 @@ class SearchFragment : Fragment() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    enum class ResponseCode{NO_RESULT, NETWORK_ERROR}
+    enum class ResponseCode { NO_RESULT, NETWORK_ERROR }
 }

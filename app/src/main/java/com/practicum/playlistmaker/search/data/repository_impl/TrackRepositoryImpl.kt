@@ -15,7 +15,10 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
     override fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>> = flow {
         var response = networkClient.doRequest(SearchRequest(expression))
 
-        if (response.resultCode == -1) emit(Pair(null, "Network Error"))
+        if (response.resultCode == -1) {
+            emit(Pair(null, "Network Error"))
+            return@flow
+        }
 
         if (response.resultCode == 200) {
             val result = ((response as SearchResponse).results.map {

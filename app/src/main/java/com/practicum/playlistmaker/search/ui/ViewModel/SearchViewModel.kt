@@ -55,7 +55,7 @@ class SearchViewModel(
     }
 
     fun debounceRequest(searchInput: String) {
-        if (currentSearchQueue == searchInput) return
+        if ((currentSearchQueue == searchInput) or searchInput.isNullOrEmpty()) return
 
         searchJob?.cancel()
         currentSearchQueue = searchInput
@@ -69,7 +69,6 @@ class SearchViewModel(
         if (networkFailed == false) lastSearchQueue = currentSearchQueue
         screenStateLiveData.setValue(SearchScreenState.Loading)
         networkFailed = false
-
         viewModelScope.launch {
             getTracksUseCase.searchTracks(lastSearchQueue)
                 .collect { pair ->
@@ -79,14 +78,20 @@ class SearchViewModel(
     }
 
     private fun processResult(tracks: List<Track>?, message: String?) {
-        if (!tracks.isNullOrEmpty()) {
-            searchLiveData.postValue(tracks as ArrayList<Track>)
-            screenStateLiveData.postValue(SearchScreenState.Tracks)
-        } else if (tracks.isNullOrEmpty() and message.isNullOrEmpty()) {
-            screenStateLiveData.postValue(SearchScreenState.EmptyResult)
-        } else {
-            networkFailed = true
-            screenStateLiveData.postValue(SearchScreenState.NetwotkError)
+        when {
+            !tracks.isNullOrEmpty() -> {
+                searchLiveData.postValue(tracks as ArrayList<Track>)
+                screenStateLiveData.postValue(SearchScreenState.Tracks)
+            }
+
+            tracks.isNullOrEmpty() and message.isNullOrEmpty() -> {
+                screenStateLiveData.postValue(SearchScreenState.EmptyResult)
+            }
+
+            else -> {
+                networkFailed = true
+                screenStateLiveData.postValue(SearchScreenState.NetwotkError)
+            }
         }
     }
 

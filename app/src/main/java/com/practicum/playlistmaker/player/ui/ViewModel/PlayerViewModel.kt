@@ -67,7 +67,10 @@ class PlayerViewModel(
         when (playerStateLiveData.value) {
             PlaybackState.PLAYING_STATE -> pausePlayer()
             PlaybackState.PAUSED_STATE, PlaybackState.PREPARED_STATE -> startPlayer()
-            PlaybackState.DEFAULT_STATE -> { isPlaying = false }
+            PlaybackState.DEFAULT_STATE -> {
+                isPlaying = false
+            }
+
             null -> {}
         }
     }
@@ -78,9 +81,9 @@ class PlayerViewModel(
 
     private fun postCurrentTime() {
         timerJob = viewModelScope.launch {
-            while(isPlaying) {
+            while (isPlaying) {
                 playbackTimeLiveData.postValue(
-                    if(playerStateLiveData.value == PlaybackState.PREPARED_STATE)
+                    if (playerStateLiveData.value == PlaybackState.PREPARED_STATE)
                         DEFAULT_TIME
                     else playerInteractor.getCurrentTime()
                 )
