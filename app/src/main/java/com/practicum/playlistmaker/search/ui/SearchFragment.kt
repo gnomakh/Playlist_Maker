@@ -47,11 +47,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.updateButton.setOnClickListener {
-            binding.progressBar.isVisible = true
-            viewModel.debounceRequest(searchQueue)
-        }
-
         binding.clearHistory.setOnClickListener {
             viewModel.clearHistory()
             toggleOffHistory()
@@ -59,6 +54,10 @@ class SearchFragment : Fragment() {
 
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) {
             render(it)
+        }
+
+        binding.updateButton.setOnClickListener {
+            viewModel.retrySearch()
         }
 
         binding.clearButton.setOnClickListener {

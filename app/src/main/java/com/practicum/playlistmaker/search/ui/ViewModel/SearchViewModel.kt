@@ -55,9 +55,13 @@ class SearchViewModel(
         searchJob?.cancel()
     }
 
+    fun retrySearch() {
+        debounceRequest(lastSearchQueue)
+    }
+
     fun debounceRequest(searchInput: String) {
         searchJob?.cancel()
-        if ((currentSearchQueue == searchInput) or searchInput.isNullOrEmpty()) return
+        if ((currentSearchQueue == searchInput) and (networkFailed == false)) return
         currentSearchQueue = searchInput
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
@@ -66,7 +70,7 @@ class SearchViewModel(
     }
 
     private fun searchRequest() {
-        if (networkFailed == false) lastSearchQueue = currentSearchQueue
+        if (!networkFailed) lastSearchQueue = currentSearchQueue
         screenStateLiveData.setValue(SearchScreenState.Loading)
         networkFailed = false
         viewModelScope.launch {
