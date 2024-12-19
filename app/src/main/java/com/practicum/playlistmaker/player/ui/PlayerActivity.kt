@@ -24,7 +24,7 @@ class PlayerActivity : AppCompatActivity() {
         binding = ActivityPlayerBinding.inflate(inflater)
         setContentView(binding.root)
 
-        binding.backButton.setOnClickListener {
+        binding.playerToolbar.setNavigationOnClickListener {
             finish()
         }
 

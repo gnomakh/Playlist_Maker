@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.PlayerActivity">
+    tools:context=".player.ui.PlayerActivity"
+    android:background="@color/backgroundColor">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_border"
@@ -20,16 +21,27 @@
         android:orientation="vertical"
         app:layout_constraintGuide_end="24dp" />
 
-    <ImageView
-        android:id="@+id/back_button"
-        style="@style/BackArrow"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/player_toolbar"
+        app:titleTextAppearance="@style/HeadingTextStyle"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/arrow_back"
+        app:navigationIcon="@drawable/arrow_back"
+        app:navigationIconTint="@color/headingTextColor"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/back_button"-->
+<!--        style="@style/BackArrow"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="24dp"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:src="@drawable/arrow_back"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <ImageView
         android:id="@+id/artwork_cover"

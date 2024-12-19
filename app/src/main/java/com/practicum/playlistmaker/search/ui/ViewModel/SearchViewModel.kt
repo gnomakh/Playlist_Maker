@@ -13,8 +13,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    val getTracksUseCase: GetTracksUseCase,
-    val getHistoryInteractor: HistoryInteractor
+    private val getTracksUseCase: GetTracksUseCase,
+    private val getHistoryInteractor: HistoryInteractor
 ) : ViewModel() {
 
     private var lastSearchQueue = ""
@@ -22,42 +22,42 @@ class SearchViewModel(
     private var searchJob: Job? = null
     private var networkFailed = false
 
-    private val searchLiveData = MutableLiveData<ArrayList<Track>>()
-    fun getSearchLiveData(): LiveData<ArrayList<Track>> = searchLiveData
-
-    private val historyLiveData = MutableLiveData<ArrayList<Track>>()
-    fun getHistoryLiveData(): LiveData<ArrayList<Track>> = historyLiveData
+    private var currentTrackList: List<Track> = arrayListOf()
 
     private val screenStateLiveData = MutableLiveData<SearchScreenState>()
     fun getScreenStateLiveData(): LiveData<SearchScreenState> = screenStateLiveData
 
-    init {
-        historyLiveData.setValue(getHistoryInteractor.getHistory())
+    fun renderTracks() {
+        screenStateLiveData.postValue(SearchScreenState.Tracks(currentTrackList))
     }
 
-    fun postState(state: SearchScreenState) {
-        screenStateLiveData.setValue(state)
+    fun renderHistory() {
+        if(getHistoryInteractor.getHistory().isEmpty()) {
+            screenStateLiveData.postValue(SearchScreenState.Nothing)
+            return
+        }
+        screenStateLiveData.postValue(SearchScreenState.History(getHistoryInteractor.getHistory()))
     }
 
     fun clearHistory() {
         getHistoryInteractor.clearHistory()
-        historyLiveData.setValue(arrayListOf())
     }
 
     fun addTrackToHistory(track: Track) {
-        val historyList = historyLiveData.value ?: arrayListOf()
-        getHistoryInteractor.addtrackToHistory(historyList, track)
-        historyLiveData.setValue(getHistoryInteractor.getHistory())
+        getHistoryInteractor.addtrackToHistory(track)
     }
 
     fun clearTrackList() {
-        searchLiveData.setValue(arrayListOf())
+        currentTrackList = arrayListOf()
+    }
+
+    fun cancelJob() {
+        searchJob?.cancel()
     }
 
     fun debounceRequest(searchInput: String) {
-        if ((currentSearchQueue == searchInput) or searchInput.isNullOrEmpty()) return
-
         searchJob?.cancel()
+        if ((currentSearchQueue == searchInput) or searchInput.isNullOrEmpty()) return
         currentSearchQueue = searchInput
         searchJob = viewModelScope.launch {
             delay(SEARCH_DEBOUNCE_DELAY)
@@ -80,8 +80,8 @@ class SearchViewModel(
     private fun processResult(tracks: List<Track>?, message: String?) {
         when {
             !tracks.isNullOrEmpty() -> {
-                searchLiveData.postValue(tracks as ArrayList<Track>)
-                screenStateLiveData.postValue(SearchScreenState.Tracks)
+                currentTrackList = tracks
+                screenStateLiveData.postValue(SearchScreenState.Tracks(currentTrackList))
             }
 
             tracks.isNullOrEmpty() and message.isNullOrEmpty() -> {

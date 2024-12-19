@@ -13,6 +13,11 @@ class SettingsRepositoryImpl(val sharedPref: SharedPreferences) : SettingsReposi
         return sharedPref.getBoolean(THEME_PREFS_KEY, false)
     }
 
+    override fun getThemeStatePresence() : Boolean {
+        return if (sharedPref.contains(THEME_PREFS_KEY)) true
+        else false
+    }
+
     companion object {
         const val THEME_PREFS_KEY = "theme_prefs_key"
     }

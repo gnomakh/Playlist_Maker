@@ -25,8 +25,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
-    private var tracks = arrayListOf<Track>()
-    private var historySearch: ArrayList<Track> = arrayListOf()
     private val adapter: TracksAdapter = TracksAdapter()
 
     private var clickCurrentState = true
@@ -55,17 +53,8 @@ class SearchFragment : Fragment() {
         }
 
         binding.clearHistory.setOnClickListener {
-            historySearch.clear()
             viewModel.clearHistory()
             toggleOffHistory()
-        }
-
-        viewModel.getHistoryLiveData().observe(viewLifecycleOwner) {
-            historySearch = it
-        }
-
-        viewModel.getSearchLiveData().observe(viewLifecycleOwner) {
-            tracks = it
         }
 
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) {
@@ -81,9 +70,7 @@ class SearchFragment : Fragment() {
 
         binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus and binding.inputSearch.text.isEmpty()) {
-                viewModel.postState(SearchScreenState.History)
-            } else {
-                viewModel.postState(SearchScreenState.Nothing)
+                viewModel.renderHistory()
             }
         }
 
@@ -99,11 +86,12 @@ class SearchFragment : Fragment() {
                     viewModel.debounceRequest(searchQueue)
                 } else {
                     clearTrackList()
+                    viewModel.cancelJob()
                 }
                 if (binding.inputSearch.hasFocus() && text?.isEmpty() == true) {
-                    viewModel.postState(SearchScreenState.History)
+                    viewModel.renderHistory()
                 } else {
-                    viewModel.postState(SearchScreenState.Nothing)
+                    viewModel.renderTracks()
                 }
             },
             afterTextChanged = { text: Editable? -> }
@@ -116,12 +104,13 @@ class SearchFragment : Fragment() {
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
             if (debounceClick()) {
                 viewModel.addTrackToHistory(track)
-                render(SearchScreenState.History)
+                if (viewModel.getScreenStateLiveData().value is SearchScreenState.History)
+                    viewModel.renderHistory()
                 adapter.notifyDataSetChanged()
                 navController.navigate(R.id.action_searchFragment_to_playerActivity)
             }
         }
-        adapter.trackList = tracks
+        adapter.trackList = arrayListOf()
         binding.rvTracks.adapter = adapter
     }
 
@@ -132,12 +121,12 @@ class SearchFragment : Fragment() {
 
     private fun render(state: SearchScreenState) {
         when (state) {
-            SearchScreenState.Loading -> showLoading()
-            SearchScreenState.Tracks -> showTracks()
-            SearchScreenState.History -> toggleOnHistory()
-            SearchScreenState.EmptyResult -> showErrorPlaceholder(ResponseCode.NO_RESULT)
-            SearchScreenState.NetwotkError -> showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
-            SearchScreenState.Nothing -> {
+            is SearchScreenState.Loading -> showLoading()
+            is SearchScreenState.Tracks -> showTracks(state.tracksSearch)
+            is SearchScreenState.History -> toggleOnHistory(state.historyList)
+            is SearchScreenState.EmptyResult -> showErrorPlaceholder(ResponseCode.NO_RESULT)
+            is SearchScreenState.NetwotkError -> showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
+            is SearchScreenState.Nothing -> {
                 hideLoading()
                 toggleOffHistory()
                 toggleOffPlaceholders()
@@ -146,12 +135,12 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showTracks() {
+    private fun showTracks(trackList: List<Track>) {
         toggleOffPlaceholders()
         toggleOffHistory()
         hideLoading()
         binding.rvTracks.isVisible = true
-        adapter.trackList = tracks
+        adapter.trackList = trackList as ArrayList<Track>
         adapter.notifyDataSetChanged()
     }
 
@@ -174,15 +163,15 @@ class SearchFragment : Fragment() {
         binding.searchPlaceholder.isVisible = false
     }
 
-    private fun toggleOnHistory() {
+    private fun toggleOnHistory(historyList: List<Track>) {
         toggleOffPlaceholders()
         hideLoading()
-        historySearch = viewModel.getHistoryLiveData().value ?: arrayListOf()
-        if (historySearch.isNotEmpty() and tracks.isEmpty()) {
+        val history = historyList
+        if (history.isNotEmpty()) {
             binding.rvTracks.isVisible = true
             binding.youSearched.isVisible = true
             binding.clearHistory.isVisible = true
-            adapter.trackList = historySearch
+            adapter.trackList = history as ArrayList<Track>
             adapter.notifyDataSetChanged()
         }
     }
@@ -190,17 +179,13 @@ class SearchFragment : Fragment() {
     private fun toggleOffHistory() {
         binding.youSearched.isVisible = false
         binding.clearHistory.isVisible = false
-        adapter.trackList = tracks
+        adapter.trackList = arrayListOf()
         adapter.notifyDataSetChanged()
     }
 
     private fun clearTrackList() {
         viewModel.clearTrackList()
-        if (historySearch.isEmpty()) {
-            viewModel.postState(SearchScreenState.Nothing)
-        } else {
-            viewModel.postState(SearchScreenState.History)
-        }
+        viewModel.renderHistory()
         adapter.notifyDataSetChanged()
     }
 
