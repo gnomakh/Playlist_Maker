@@ -33,7 +33,9 @@ class App : Application() {
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
-            if (darkThemeEnabled) {
+            if (!settingsInteractor.getThemeStatePresence()) {
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            } else if (darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES
             } else {
                 AppCompatDelegate.MODE_NIGHT_NO

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/backgroundColor"
     android:orientation="vertical"
-    tools:ignore="ExtraText"
-    tools:context="com.practicum.playlistmaker.settings.ui.SettingsFragment">
+    tools:context="com.practicum.playlistmaker.settings.ui.SettingsFragment"
+    tools:ignore="ExtraText">
 
-    <TextView
-        android:padding="16dp"
-        style="@style/HeadingTextStyle"
-        android:text="@string/settings" />
+    <com.google.android.material.appbar.MaterialToolbar
+        app:titleTextAppearance="@style/HeadingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        app:title="@string/settings"
+        />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/theme_switch"
@@ -27,52 +30,40 @@
         android:theme="@style/SwitchStyle"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/share_button"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/padding_16"
-        android:paddingVertical="@dimen/vertical_padding">
+        android:layout_weight="0"
+        android:drawableEnd="@drawable/share"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp"
+        android:text="@string/share"
+        app:drawableTint="@color/iconColor" />
 
-        <TextView
-            style="@style/SettingsTextStyle"
-            android:text="@string/share" />
-
-        <ImageView
-            style="@style/IconStyle"
-            android:src="@drawable/share" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/support_button"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/padding_16"
-        android:paddingVertical="@dimen/vertical_padding">
+        android:layout_weight="0"
+        android:drawableEnd="@drawable/share"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp"
+        android:text="@string/support"
+        app:drawableTint="@color/iconColor" />
 
-        <TextView
-            style="@style/SettingsTextStyle"
-            android:text="@string/support" />
-
-        <ImageView
-            style="@style/IconStyle"
-            android:src="@drawable/support" />
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/agreement_button"
+        style="@style/SettingsTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="@dimen/padding_16"
-        android:paddingVertical="@dimen/vertical_padding">
-
-        <TextView
-            style="@style/SettingsTextStyle"
-            android:text="@string/agreement" />
-
-        <ImageView
-            style="@style/IconStyle"
-            android:src="@drawable/arrow_forward" />
-    </LinearLayout>
+        android:layout_weight="0"
+        android:drawableEnd="@drawable/share"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp"
+        android:text="@string/agreement"
+        app:drawableTint="@color/iconColor" />
 
 </LinearLayout>

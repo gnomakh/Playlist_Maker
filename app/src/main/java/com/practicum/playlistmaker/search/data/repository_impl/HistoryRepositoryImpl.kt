@@ -11,8 +11,8 @@ class HistoryRepositoryImpl(
     val gSon: Gson
 ) : HistoryRepository {
 
-    override fun addTrackToHistory(array: ArrayList<Track>, track: Track) {
-
+    override fun addTrackToHistory(track: Track) {
+        val array = getHistory()
         array.removeIf { it.trackId == track.trackId }
         if (array.size > 9) array.removeLast()
         array.add(0, track)
@@ -22,10 +22,10 @@ class HistoryRepositoryImpl(
             .apply()
     }
 
-    override fun getHistory(): ArrayList<Track>? {
-        val jsonStr = sharedPref.getString(HISTORY_KEY, null) ?: return null
+    override fun getHistory(): ArrayList<Track> {
+        val jsonStr = sharedPref.getString(HISTORY_KEY, null) ?: return arrayListOf()
         val listType = object : TypeToken<ArrayList<Track>>() {}.type
-        return Gson().fromJson<ArrayList<Track>>(jsonStr, listType)
+        return Gson().fromJson(jsonStr, listType)
     }
 
     override fun clearHistory() {

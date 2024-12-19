@@ -38,7 +38,7 @@ val dataModule = module {
     factory { Gson() }
 
     single<NetworkClient> {
-        RetrofitNetworkClient()
+        RetrofitNetworkClient(get(), androidContext())
     }
 
     factory {

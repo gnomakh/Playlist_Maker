@@ -4,6 +4,10 @@ import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.api.SettingsRepository
 
 class SettingsInteractorImpl(val settingsRepo: SettingsRepository) : SettingsInteractor {
+    override fun getThemeStatePresence() : Boolean {
+        return settingsRepo.getThemeStatePresence()
+    }
+
     override fun saveDarkThemeState(state: Boolean) {
         settingsRepo.saveDarkThemeState(state)
     }

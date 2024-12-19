@@ -39,5 +39,4 @@ class PlayerRepositoryImpl(var mediaPlayer: MediaPlayer) : PlayerRepository {
     override fun getCurrentTime(): String {
         return dateFormat.format(mediaPlayer.currentPosition)
     }
-
 }
