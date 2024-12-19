@@ -5,15 +5,23 @@ import com.practicum.playlistmaker.search.data.dto.SearchRequest
 import com.practicum.playlistmaker.search.data.dto.SearchResponse
 import com.practicum.playlistmaker.search.domain.api.TrackRepository
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 
-    override fun searchTracks(expression: String): List<Track> {
+    override fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>> = flow {
         var response = networkClient.doRequest(SearchRequest(expression))
+
+        if (response.resultCode == -1) {
+            emit(Pair(null, "Network Error"))
+            return@flow
+        }
+
         if (response.resultCode == 200) {
-            return ((response as SearchResponse).results.map {
+            val result = ((response as SearchResponse).results.map {
                 Track(
                     it.trackName,
                     it.artistName,
@@ -27,6 +35,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     it.previewUrl
                 )
             }) as ArrayList<Track>
-        } else return emptyList()
+            emit(Pair(result, null))
+        } else emit(Pair(null, null))
     }
 }

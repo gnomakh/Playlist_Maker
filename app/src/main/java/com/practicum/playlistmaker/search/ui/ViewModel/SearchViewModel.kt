@@ -1,91 +1,105 @@
 package com.practicum.playlistmaker.search.ui.ViewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
-import com.practicum.playlistmaker.search.domain.consumer.TrackConsumer
 import com.practicum.playlistmaker.search.domain.impl.GetTracksUseCase
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SearchViewModel(
-    val getTracksUseCase: GetTracksUseCase,
-    val getHistoryInteractor: HistoryInteractor): ViewModel() {
+    private val getTracksUseCase: GetTracksUseCase,
+    private val getHistoryInteractor: HistoryInteractor
+) : ViewModel() {
 
     private var lastSearchQueue = ""
     private var currentSearchQueue = ""
+    private var searchJob: Job? = null
     private var networkFailed = false
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { searchRequest() }
 
-    private val searchLiveData = MutableLiveData<ArrayList<Track>>()
-    fun getSearchLiveData() : LiveData<ArrayList<Track>> = searchLiveData
-
-    private val historyLiveData = MutableLiveData<ArrayList<Track>>()
-    fun getHistoryLiveData() : LiveData<ArrayList<Track>> = historyLiveData
+    private var currentTrackList: List<Track> = arrayListOf()
 
     private val screenStateLiveData = MutableLiveData<SearchScreenState>()
-    fun getScreenStateLiveData() : LiveData<SearchScreenState> = screenStateLiveData
+    fun getScreenStateLiveData(): LiveData<SearchScreenState> = screenStateLiveData
 
-    init {
-        historyLiveData.setValue(getHistoryInteractor.getHistory())
+    fun renderTracks() {
+        screenStateLiveData.postValue(SearchScreenState.Tracks(currentTrackList))
     }
 
-    fun postState(state: SearchScreenState) {
-        screenStateLiveData.setValue(state)
+    fun renderHistory() {
+        if(getHistoryInteractor.getHistory().isEmpty()) {
+            screenStateLiveData.postValue(SearchScreenState.Nothing)
+            return
+        }
+        screenStateLiveData.postValue(SearchScreenState.History(getHistoryInteractor.getHistory()))
     }
 
     fun clearHistory() {
         getHistoryInteractor.clearHistory()
-        historyLiveData.setValue(arrayListOf())
     }
 
     fun addTrackToHistory(track: Track) {
-        val historyList = historyLiveData.value ?: arrayListOf()
-        getHistoryInteractor.addtrackToHistory(historyList, track)
-        historyLiveData.setValue(getHistoryInteractor.getHistory())
+        getHistoryInteractor.addtrackToHistory(track)
     }
 
     fun clearTrackList() {
-        searchLiveData.setValue(arrayListOf())
+        currentTrackList = arrayListOf()
+    }
+
+    fun cancelJob() {
+        searchJob?.cancel()
+    }
+
+    fun retrySearch() {
+        debounceRequest(lastSearchQueue)
     }
 
     fun debounceRequest(searchInput: String) {
+        searchJob?.cancel()
+        if ((currentSearchQueue == searchInput) and (networkFailed == false)) return
         currentSearchQueue = searchInput
-        handler.removeCallbacks(searchRunnable)
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
-    }
-
-    fun removeCallbacks() {
-        handler.removeCallbacks(searchRunnable)
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            searchRequest()
+        }
     }
 
     private fun searchRequest() {
-        if(networkFailed == false) lastSearchQueue = currentSearchQueue
+        if (!networkFailed) lastSearchQueue = currentSearchQueue
         screenStateLiveData.setValue(SearchScreenState.Loading)
         networkFailed = false
-        getTracksUseCase.execute(lastSearchQueue, object : TrackConsumer {
-            override fun onSuccess(response: ArrayList<Track>) {
-                searchLiveData.postValue(response)
-                screenStateLiveData.postValue(SearchScreenState.Tracks)
+        viewModelScope.launch {
+            getTracksUseCase.searchTracks(lastSearchQueue)
+                .collect { pair ->
+                    processResult(pair.first, pair.second)
+                }
+        }
+    }
+
+    private fun processResult(tracks: List<Track>?, message: String?) {
+        when {
+            !tracks.isNullOrEmpty() -> {
+                currentTrackList = tracks
+                screenStateLiveData.postValue(SearchScreenState.Tracks(currentTrackList))
             }
 
-            override fun onNoResult() {
+            tracks.isNullOrEmpty() and message.isNullOrEmpty() -> {
                 screenStateLiveData.postValue(SearchScreenState.EmptyResult)
             }
 
-            override fun onNetworkError() {
+            else -> {
                 networkFailed = true
                 screenStateLiveData.postValue(SearchScreenState.NetwotkError)
             }
-        })
+        }
     }
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
-
 }

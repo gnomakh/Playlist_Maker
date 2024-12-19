@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
@@ -20,15 +19,13 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
 import com.practicum.playlistmaker.search.ui.track.TracksAdapter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
 
-    private var tracks = arrayListOf<Track>()
-    private var historySearch: ArrayList<Track> = arrayListOf()
     private val adapter: TracksAdapter = TracksAdapter()
-
-    private val handler = Handler(Looper.getMainLooper())
 
     private var clickCurrentState = true
     private var searchQueue = ""
@@ -50,31 +47,21 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.updateButton.setOnClickListener {
-            binding.progressBar.isVisible = true
-            viewModel.debounceRequest(searchQueue)
-        }
-
         binding.clearHistory.setOnClickListener {
-            historySearch.clear()
             viewModel.clearHistory()
             toggleOffHistory()
-        }
-
-        viewModel.getHistoryLiveData().observe(viewLifecycleOwner) {
-            historySearch = it
-        }
-
-        viewModel.getSearchLiveData().observe(viewLifecycleOwner) {
-            tracks = it
         }
 
         viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
+        binding.updateButton.setOnClickListener {
+            viewModel.retrySearch()
+        }
+
         binding.clearButton.setOnClickListener {
-            binding.inputSearch.text.clear()
+            binding.inputSearch.setText("")
             clearTrackList()
             val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
             imm?.hideSoftInputFromWindow(it.windowToken, 0)
@@ -82,9 +69,7 @@ class SearchFragment : Fragment() {
 
         binding.inputSearch.setOnFocusChangeListener { view, hasFocus ->
             if (hasFocus and binding.inputSearch.text.isEmpty()) {
-                viewModel.postState(SearchScreenState.History)
-            } else {
-                viewModel.postState(SearchScreenState.Nothing)
+                viewModel.renderHistory()
             }
         }
 
@@ -100,29 +85,31 @@ class SearchFragment : Fragment() {
                     viewModel.debounceRequest(searchQueue)
                 } else {
                     clearTrackList()
-                    viewModel.removeCallbacks()
+                    viewModel.cancelJob()
                 }
                 if (binding.inputSearch.hasFocus() && text?.isEmpty() == true) {
-                    viewModel.postState(SearchScreenState.History)
+                    viewModel.renderHistory()
                 } else {
-                    viewModel.postState(SearchScreenState.Nothing)
+                    viewModel.renderTracks()
                 }
             },
             afterTextChanged = { text: Editable? -> }
         )
 
-        val navHostFragment = activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
+        val navHostFragment =
+            activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
         adapter.listener = TracksAdapter.OnTrackClickListener { track ->
-            if(debounceClick()) {
+            if (debounceClick()) {
                 viewModel.addTrackToHistory(track)
-                render(SearchScreenState.History)
+                if (viewModel.getScreenStateLiveData().value is SearchScreenState.History)
+                    viewModel.renderHistory()
                 adapter.notifyDataSetChanged()
                 navController.navigate(R.id.action_searchFragment_to_playerActivity)
             }
         }
-        adapter.trackList = tracks
+        adapter.trackList = arrayListOf()
         binding.rvTracks.adapter = adapter
     }
 
@@ -132,13 +119,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun render(state: SearchScreenState) {
-        when(state) {
-            SearchScreenState.Loading -> showLoading()
-            SearchScreenState.Tracks -> showTracks()
-            SearchScreenState.History -> toggleOnHistory()
-            SearchScreenState.EmptyResult -> showErrorPlaceholder(ResponseCode.NO_RESULT)
-            SearchScreenState.NetwotkError -> showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
-            SearchScreenState.Nothing -> {
+        when (state) {
+            is SearchScreenState.Loading -> showLoading()
+            is SearchScreenState.Tracks -> showTracks(state.tracksSearch)
+            is SearchScreenState.History -> toggleOnHistory(state.historyList)
+            is SearchScreenState.EmptyResult -> showErrorPlaceholder(ResponseCode.NO_RESULT)
+            is SearchScreenState.NetwotkError -> showErrorPlaceholder(ResponseCode.NETWORK_ERROR)
+            is SearchScreenState.Nothing -> {
                 hideLoading()
                 toggleOffHistory()
                 toggleOffPlaceholders()
@@ -147,22 +134,23 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun showTracks() {
+    private fun showTracks(trackList: List<Track>) {
         toggleOffPlaceholders()
         toggleOffHistory()
         hideLoading()
         binding.rvTracks.isVisible = true
-        adapter.trackList = tracks
+        adapter.trackList = trackList as ArrayList<Track>
         adapter.notifyDataSetChanged()
     }
 
     private fun showErrorPlaceholder(errorCode: ResponseCode) {
         toggleOffHistory()
         hideLoading()
-        when(errorCode) {
+        when (errorCode) {
             ResponseCode.NO_RESULT -> {
                 binding.searchPlaceholder.isVisible = true
             }
+
             ResponseCode.NETWORK_ERROR -> {
                 binding.networkErrorPalceholder.isVisible = true
             }
@@ -174,15 +162,15 @@ class SearchFragment : Fragment() {
         binding.searchPlaceholder.isVisible = false
     }
 
-    private fun toggleOnHistory() {
+    private fun toggleOnHistory(historyList: List<Track>) {
         toggleOffPlaceholders()
         hideLoading()
-        historySearch = viewModel.getHistoryLiveData().value ?: arrayListOf()
-        if (historySearch.isNotEmpty() and tracks.isEmpty()) {
+        val history = historyList
+        if (history.isNotEmpty()) {
             binding.rvTracks.isVisible = true
             binding.youSearched.isVisible = true
             binding.clearHistory.isVisible = true
-            adapter.trackList = historySearch
+            adapter.trackList = history as ArrayList<Track>
             adapter.notifyDataSetChanged()
         }
     }
@@ -190,12 +178,13 @@ class SearchFragment : Fragment() {
     private fun toggleOffHistory() {
         binding.youSearched.isVisible = false
         binding.clearHistory.isVisible = false
-        adapter.trackList = tracks
+        adapter.trackList = arrayListOf()
         adapter.notifyDataSetChanged()
     }
 
     private fun clearTrackList() {
         viewModel.clearTrackList()
+        viewModel.renderHistory()
         adapter.notifyDataSetChanged()
     }
 
@@ -212,10 +201,13 @@ class SearchFragment : Fragment() {
     }
 
     private fun debounceClick(): Boolean {
-        var isClickAllowed = clickCurrentState
+        val isClickAllowed = clickCurrentState
         if (clickCurrentState) {
             clickCurrentState = false
-            handler.postDelayed({ clickCurrentState = true }, CLICK_DEBOUNCE_DELAY)
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(CLICK_DEBOUNCE_DELAY)
+                clickCurrentState = true
+            }
         }
         return isClickAllowed
     }
@@ -224,5 +216,5 @@ class SearchFragment : Fragment() {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
-    enum class ResponseCode{NO_RESULT, NETWORK_ERROR}
+    enum class ResponseCode { NO_RESULT, NETWORK_ERROR }
 }

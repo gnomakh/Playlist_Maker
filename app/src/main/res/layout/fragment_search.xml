@@ -9,10 +9,12 @@
     tools:ignore="ExtraText"
     tools:context="com.practicum.playlistmaker.search.ui.SearchFragment">
 
-    <TextView
-        style="@style/HeadingTextStyle"
-        android:padding="16dp"
-        android:text="@string/search" />
+    <com.google.android.material.appbar.MaterialToolbar
+        app:titleTextAppearance="@style/HeadingTextStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/search"
+        />
 
     <FrameLayout
         android:layout_width="match_parent"
