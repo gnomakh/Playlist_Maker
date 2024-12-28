@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface HistoryRepository {
     suspend fun addTrackToHistory(track: Track)
-    fun getHistory(): Flow<ArrayList<Track>>
+    fun getHistory(): Flow<List<Track>>
     fun clearHistory()
 }

@@ -11,7 +11,7 @@ class HistoryInteractorImpl(val historyRepository: HistoryRepository) : HistoryI
         historyRepository.addTrackToHistory(track)
     }
 
-    override fun getHistory(): Flow<ArrayList<Track>> {
+    override fun getHistory(): Flow<List<Track>> {
         return historyRepository.getHistory()
     }
 

@@ -7,16 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.media.domain.api.FavoritesInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
-import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    val playerInteractor: PlayerInteractor,
-    val historyInteractor: HistoryInteractor,
-    val favoritesInteractor: FavoritesInteractor
+    private val playerInteractor: PlayerInteractor,
+    private val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null

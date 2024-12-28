@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.media.domain.api.FavoritesRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-class FavoritesInteractorImpl(val favoritesRepository: FavoritesRepository) : FavoritesInteractor {
+class FavoritesInteractorImpl(private val favoritesRepository: FavoritesRepository) : FavoritesInteractor {
 
     override suspend fun addTrack(track: Track) {
         favoritesRepository.addTrack(track)

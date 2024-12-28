@@ -28,9 +28,9 @@ class HistoryRepositoryImpl(
             .apply()
     }
 
-    override fun getHistory(): Flow<ArrayList<Track>> = flow {
+    override fun getHistory(): Flow<List<Track>> = flow {
         val jsonStr = sharedPref.getString(HISTORY_KEY, null)
-        val listType = object : TypeToken<ArrayList<Track>>() {}.type
+        val listType = object : TypeToken<List<Track>>() {}.type
         emit(mapFavorites(Gson().fromJson(jsonStr, listType) ?: arrayListOf()))
     }
 

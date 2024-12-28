@@ -34,12 +34,16 @@ class SearchViewModel(
     fun renderHistory() {
 
         viewModelScope.launch {
-            getHistoryInteractor.getHistory().collect { list ->
-                if (list.isNullOrEmpty()) {
-                    screenStateLiveData.postValue(SearchScreenState.Nothing)
-                } else {
-                    screenStateLiveData.postValue(SearchScreenState.History(list))
+            try {
+                getHistoryInteractor.getHistory().collect { list ->
+                    if (list.isNullOrEmpty()) {
+                        screenStateLiveData.postValue(SearchScreenState.Nothing)
+                    } else {
+                        screenStateLiveData.postValue(SearchScreenState.History(list))
+                    }
                 }
+            } catch (e: Exception) {
+                screenStateLiveData.postValue(SearchScreenState.Nothing)
             }
         }
     }
