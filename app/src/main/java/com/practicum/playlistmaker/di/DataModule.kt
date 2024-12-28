@@ -2,6 +2,8 @@ package com.practicum.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
+import androidx.room.Room
+import com.example.courutines.db.AppDatabase
 import com.google.gson.Gson
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
@@ -43,5 +45,10 @@ val dataModule = module {
 
     factory {
         MediaPlayer()
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+            .build()
     }
 }

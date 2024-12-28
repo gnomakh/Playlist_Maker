@@ -32,12 +32,16 @@ class SearchViewModel(
     }
 
     fun renderHistory() {
-        if(getHistoryInteractor.getHistory().isEmpty()) {
+
+        val list = getHistoryInteractor.getHistory()
+        if (list.isNullOrEmpty()) {
             screenStateLiveData.postValue(SearchScreenState.Nothing)
-            return
+        } else {
+            screenStateLiveData.postValue(SearchScreenState.History(list))
         }
-        screenStateLiveData.postValue(SearchScreenState.History(getHistoryInteractor.getHistory()))
+
     }
+
 
     fun clearHistory() {
         getHistoryInteractor.clearHistory()

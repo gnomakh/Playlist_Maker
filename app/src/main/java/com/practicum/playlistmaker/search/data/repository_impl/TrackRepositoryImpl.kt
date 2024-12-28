@@ -1,5 +1,6 @@
 package com.practicum.playlistmaker.search.data.repository_impl
 
+import com.example.courutines.db.AppDatabase
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.dto.SearchRequest
 import com.practicum.playlistmaker.search.data.dto.SearchResponse
@@ -10,7 +11,8 @@ import kotlinx.coroutines.flow.flow
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
+class TrackRepositoryImpl(private val networkClient: NetworkClient, private val db: AppDatabase) :
+    TrackRepository {
 
     override fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>> = flow {
         var response = networkClient.doRequest(SearchRequest(expression))
@@ -32,10 +34,20 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     it.releaseDate,
                     it.primaryGenreName,
                     it.country,
-                    it.previewUrl
+                    it.previewUrl,
+                    isFavorite = false
                 )
             }) as ArrayList<Track>
-            emit(Pair(result, null))
+            val ids = db.getTrackDao().getTracksId()
+            val tracksMapped = result.map { track ->
+                track.apply {
+                    isFavorite =
+                        track.trackId in ids
+                }
+            } as ArrayList<Track>
+
+            emit(Pair(tracksMapped, null))
+
         } else emit(Pair(null, null))
     }
 }

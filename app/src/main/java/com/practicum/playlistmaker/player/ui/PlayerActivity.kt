@@ -30,10 +30,20 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.getTrackInfoLiveData().observe(this) {
             setTrackInfo(it)
+            binding.likeButton.setImageResource(
+                when (it.isFavorite) {
+                    true -> R.drawable.like_button_active
+                    false -> R.drawable.like_button_unactive
+                }
+            )
         }
 
         binding.playButton.setOnClickListener {
             viewModel.playbackControl()
+        }
+
+        binding.likeButton.setOnClickListener {
+            viewModel.onFavoriteClick()
         }
 
         viewModel.getPlayerStateLiveData().observe(this) {

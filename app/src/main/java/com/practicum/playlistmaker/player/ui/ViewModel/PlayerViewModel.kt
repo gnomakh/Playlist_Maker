@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.media.domain.api.FavoritesInteractor
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
 import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     val playerInteractor: PlayerInteractor,
-    val historyInteractor: HistoryInteractor
+    val historyInteractor: HistoryInteractor,
+    val favoritesInteractor: FavoritesInteractor
 ) : ViewModel() {
 
     private var timerJob: Job? = null
@@ -88,6 +90,20 @@ class PlayerViewModel(
                     else playerInteractor.getCurrentTime()
                 )
                 delay(TIMER_DELAY)
+            }
+        }
+    }
+
+    fun onFavoriteClick() {
+        val track = trackInfoLiveData.value
+        if (track != null) {
+            if(track.isFavorite) {
+                trackInfoLiveData.postValue(track?.apply { isFavorite = false })
+                viewModelScope.launch { favoritesInteractor.deleteTrack(track) }
+
+            } else {
+                trackInfoLiveData.postValue(track?.apply { isFavorite = true })
+                viewModelScope.launch { favoritesInteractor.addTrack(track) }
             }
         }
     }

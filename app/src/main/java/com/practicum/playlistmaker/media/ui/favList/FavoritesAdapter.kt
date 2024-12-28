@@ -1,12 +1,13 @@
-package com.practicum.playlistmaker.search.ui.track
+package com.practicum.playlistmaker.media.ui.favList
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.TrackItemBinding
 import com.practicum.playlistmaker.search.domain.models.Track
+import com.practicum.playlistmaker.search.ui.track.TracksHolder
 
-class TracksAdapter() : RecyclerView.Adapter<TracksHolder>() {
+class FavoritesAdapter() : RecyclerView.Adapter<TracksHolder>() {
 
     var trackList = arrayListOf<Track>()
     var listener: OnTrackClickListener? = null
