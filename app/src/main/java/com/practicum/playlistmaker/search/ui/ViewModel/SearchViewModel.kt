@@ -33,13 +33,15 @@ class SearchViewModel(
 
     fun renderHistory() {
 
-        val list = getHistoryInteractor.getHistory()
-        if (list.isNullOrEmpty()) {
-            screenStateLiveData.postValue(SearchScreenState.Nothing)
-        } else {
-            screenStateLiveData.postValue(SearchScreenState.History(list))
+        viewModelScope.launch {
+            getHistoryInteractor.getHistory().collect { list ->
+                if (list.isNullOrEmpty()) {
+                    screenStateLiveData.postValue(SearchScreenState.Nothing)
+                } else {
+                    screenStateLiveData.postValue(SearchScreenState.History(list))
+                }
+            }
         }
-
     }
 
 
@@ -48,7 +50,7 @@ class SearchViewModel(
     }
 
     fun addTrackToHistory(track: Track) {
-        getHistoryInteractor.addtrackToHistory(track)
+        viewModelScope.launch { getHistoryInteractor.addtrackToHistory(track) }
     }
 
     fun clearTrackList() {

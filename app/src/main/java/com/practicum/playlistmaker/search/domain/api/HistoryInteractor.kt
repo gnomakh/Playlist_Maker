@@ -4,7 +4,7 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
 interface HistoryInteractor {
-    fun addtrackToHistory(track: Track)
-    fun getHistory(): ArrayList<Track>
+    suspend fun addtrackToHistory(track: Track)
+    fun getHistory(): Flow<ArrayList<Track>>
     fun clearHistory()
 }

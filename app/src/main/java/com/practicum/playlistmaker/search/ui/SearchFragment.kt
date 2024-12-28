@@ -13,8 +13,10 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.google.gson.Gson
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
+import com.practicum.playlistmaker.root.RootActivity
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.ViewModel.SearchViewModel
 import com.practicum.playlistmaker.search.ui.state.SearchScreenState
@@ -35,6 +37,8 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
+    private val gson = Gson()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +50,8 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        clickCurrentState = true
 
         binding.clearHistory.setOnClickListener {
             viewModel.clearHistory()
@@ -106,7 +112,12 @@ class SearchFragment : Fragment() {
                 if (viewModel.getScreenStateLiveData().value is SearchScreenState.History)
                     viewModel.renderHistory()
                 adapter.notifyDataSetChanged()
-                navController.navigate(R.id.action_searchFragment_to_playerActivity)
+
+                val gsonTrack = gson.toJson(track)
+                val bundle = Bundle()
+                bundle.putString("trackForPlayer", gsonTrack)
+
+                navController.navigate(R.id.action_searchFragment_to_playerFragment, bundle)
             }
         }
         adapter.trackList = arrayListOf()

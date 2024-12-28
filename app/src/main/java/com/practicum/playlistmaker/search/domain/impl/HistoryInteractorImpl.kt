@@ -7,11 +7,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class HistoryInteractorImpl(val historyRepository: HistoryRepository) : HistoryInteractor {
-    override fun addtrackToHistory(track: Track) {
+    override suspend fun addtrackToHistory(track: Track) {
         historyRepository.addTrackToHistory(track)
     }
 
-    override fun getHistory(): ArrayList<Track>{
+    override fun getHistory(): Flow<ArrayList<Track>> {
         return historyRepository.getHistory()
     }
 

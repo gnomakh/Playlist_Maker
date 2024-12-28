@@ -22,8 +22,6 @@ class PlayerViewModel(
     private var timerJob: Job? = null
     private var isPlaying = false
 
-    val trackOnPlayer = historyInteractor.getHistory()[0]
-
     private val trackInfoLiveData = MutableLiveData<Track>()
     fun getTrackInfoLiveData(): LiveData<Track> = trackInfoLiveData
 
@@ -33,16 +31,16 @@ class PlayerViewModel(
     private var playerStateLiveData = MutableLiveData(PlaybackState.DEFAULT_STATE)
     fun getPlayerStateLiveData(): LiveData<PlaybackState> = playerStateLiveData
 
-    init {
-        trackInfoLiveData.postValue(trackOnPlayer)
-        preparePlayer()
+    fun initializeViewModel(track: Track) {
+        trackInfoLiveData.postValue(track)
+        preparePlayer(track)
     }
 
-    private fun preparePlayer() {
+    private fun preparePlayer(track: Track) {
         isPlaying = false
         playerStateLiveData.postValue(PlaybackState.PREPARED_STATE)
         playerInteractor.preparePlayer(
-            trackOnPlayer.previewUrl,
+            track!!.previewUrl,
             {
                 playerStateLiveData.postValue(PlaybackState.PREPARED_STATE)
             },
@@ -77,8 +75,12 @@ class PlayerViewModel(
         }
     }
 
-    fun onActivityPause() {
+    fun onAppPause() {
         if (playerStateLiveData.value == PlaybackState.PLAYING_STATE) pausePlayer()
+    }
+
+    fun onFragmentDestroy() {
+        playerInteractor.releaseMediaPlayer()
     }
 
     private fun postCurrentTime() {
@@ -98,11 +100,11 @@ class PlayerViewModel(
         val track = trackInfoLiveData.value
         if (track != null) {
             if(track.isFavorite) {
-                trackInfoLiveData.postValue(track?.apply { isFavorite = false })
+                trackInfoLiveData.postValue(track.apply { isFavorite = false })
                 viewModelScope.launch { favoritesInteractor.deleteTrack(track) }
 
             } else {
-                trackInfoLiveData.postValue(track?.apply { isFavorite = true })
+                trackInfoLiveData.postValue(track.apply { isFavorite = true })
                 viewModelScope.launch { favoritesInteractor.addTrack(track) }
             }
         }

@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.search.domain.api.HistoryRepository
 import com.practicum.playlistmaker.search.domain.models.Track
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -16,8 +15,10 @@ class HistoryRepositoryImpl(
     private val db: AppDatabase
 ) : HistoryRepository {
 
-    override fun addTrackToHistory(track: Track) {
-        val array = getHistory()
+    override suspend fun addTrackToHistory(track: Track) {
+        val jsonStr = sharedPref.getString(HISTORY_KEY, null)
+        val listType = object : TypeToken<ArrayList<Track>>() {}.type
+        val array = mapFavorites(Gson().fromJson<ArrayList<Track>>(jsonStr, listType) ?: arrayListOf())
         array.removeIf { it.trackId == track.trackId }
         if (array.size > 9) array.removeLast()
         array.add(0, track)
@@ -27,16 +28,15 @@ class HistoryRepositoryImpl(
             .apply()
     }
 
-    override fun getHistory(): ArrayList<Track> {
+    override fun getHistory(): Flow<ArrayList<Track>> = flow {
         val jsonStr = sharedPref.getString(HISTORY_KEY, null)
         val listType = object : TypeToken<ArrayList<Track>>() {}.type
-        return Gson().fromJson(jsonStr, listType) ?: arrayListOf()
+        emit(mapFavorites(Gson().fromJson(jsonStr, listType) ?: arrayListOf()))
     }
 
     override fun clearHistory() {
         sharedPref.edit().clear().apply()
     }
-
 
     private suspend fun mapFavorites(tracks: ArrayList<Track>) : ArrayList<Track> {
             val ids = db.getTrackDao().getTracksId()

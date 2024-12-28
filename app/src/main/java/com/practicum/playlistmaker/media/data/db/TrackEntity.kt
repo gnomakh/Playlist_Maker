@@ -13,7 +13,6 @@ data class TrackEntity(
     val artistName: String,
     val trackTimeMillis: String,
     val artworkUrl100: String,
-
     @PrimaryKey(autoGenerate = true)
     val trackId: Int,
     val collectionName: String,
@@ -21,5 +20,6 @@ data class TrackEntity(
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-    var isFavorite: Boolean
+    var isFavorite: Boolean,
+    val addedAt: Long = System.currentTimeMillis()
 )

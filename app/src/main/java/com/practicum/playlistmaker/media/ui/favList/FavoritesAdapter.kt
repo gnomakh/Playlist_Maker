@@ -7,7 +7,7 @@ import com.practicum.playlistmaker.databinding.TrackItemBinding
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.track.TracksHolder
 
-class FavoritesAdapter() : RecyclerView.Adapter<TracksHolder>() {
+class FavoritesAdapter : RecyclerView.Adapter<TracksHolder>() {
 
     var trackList = arrayListOf<Track>()
     var listener: OnTrackClickListener? = null
