@@ -3,8 +3,9 @@ package com.practicum.playlistmaker.di
 import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
-import com.example.courutines.db.AppDatabase
+import com.practicum.playlistmaker.media.data.db.favorites_db.AppDatabase
 import com.google.gson.Gson
+import com.practicum.playlistmaker.media.data.db.playlists_db.PlaylistsDatabase
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.network.ITunesAPI
 import com.practicum.playlistmaker.search.data.network.RetrofitNetworkClient
@@ -48,7 +49,14 @@ val dataModule = module {
     }
 
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "favdatabase.db")
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    single {
+        Room.databaseBuilder(androidContext(), PlaylistsDatabase::class.java, "pldatabase.db")
+            .fallbackToDestructiveMigration()
             .build()
     }
 }

@@ -24,14 +24,6 @@ class RootActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         bottomNavigationManager()
-
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        val bottomNavMenu = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
-        bottomNavMenu.setupWithNavController(navController)
-
     }
 
     private fun bottomNavigationManager() {
@@ -43,6 +35,7 @@ class RootActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.playerFragment -> hideBottomNavigation()
+                R.id.playlistCreationFragment -> hideBottomNavigation()
                 else -> showBottomNavigation()
             }
         }

@@ -13,7 +13,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
-import com.practicum.playlistmaker.root.RootActivity
 import com.practicum.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

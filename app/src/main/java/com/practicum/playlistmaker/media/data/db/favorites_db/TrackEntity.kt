@@ -1,4 +1,4 @@
-package com.example.courutines.db
+package com.practicum.playlistmaker.media.data.db.favorites_db
 
 import androidx.room.ColumnInfo
 import androidx.room.ColumnInfo.Companion.TEXT

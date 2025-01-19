@@ -48,4 +48,8 @@
     <string name="genre_pl">Жанр</string>
     <string name="country_pl">Страна</string>
 
+    <string name="playlist_title">Название*</string>
+    <string name="playlist_description">Описание</string>
+    <string name ="create_playlist">Создать</string>
+
 </resources>

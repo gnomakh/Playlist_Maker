@@ -1,4 +1,4 @@
-package com.example.courutines.db
+package com.practicum.playlistmaker.media.data.db.favorites_db
 
 import androidx.room.Dao
 import androidx.room.Delete

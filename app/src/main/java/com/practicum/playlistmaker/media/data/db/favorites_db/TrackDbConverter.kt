@@ -1,10 +1,6 @@
-package com.practicum.playlistmaker.media.data.db
+package com.practicum.playlistmaker.media.data.db.favorites_db
 
-import com.example.courutines.db.TrackEntity
-import com.practicum.playlistmaker.search.data.dto.TrackDto
 import com.practicum.playlistmaker.search.domain.models.Track
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TrackDbConverter {
     fun map(track: Track): TrackEntity {

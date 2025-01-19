@@ -1,6 +1,6 @@
 package com.practicum.playlistmaker.search.data.repository_impl
 
-import com.example.courutines.db.AppDatabase
+import com.practicum.playlistmaker.media.data.db.favorites_db.AppDatabase
 import com.practicum.playlistmaker.search.data.NetworkClient
 import com.practicum.playlistmaker.search.data.dto.SearchRequest
 import com.practicum.playlistmaker.search.data.dto.SearchResponse

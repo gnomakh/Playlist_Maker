@@ -1,11 +1,11 @@
-package com.example.courutines.db
+package com.practicum.playlistmaker.media.data.db.favorites_db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
 
 @Database(
-    version = 1,
+    version = 2,
     entities = [
         TrackEntity::class
     ]

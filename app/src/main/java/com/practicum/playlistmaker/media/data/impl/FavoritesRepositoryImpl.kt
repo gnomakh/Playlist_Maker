@@ -1,8 +1,8 @@
 package com.practicum.playlistmaker.media.data.impl
 
-import com.example.courutines.db.AppDatabase
-import com.example.courutines.db.TrackEntity
-import com.practicum.playlistmaker.media.data.db.TrackDbConverter
+import com.practicum.playlistmaker.media.data.db.favorites_db.AppDatabase
+import com.practicum.playlistmaker.media.data.db.favorites_db.TrackEntity
+import com.practicum.playlistmaker.media.data.db.favorites_db.TrackDbConverter
 import com.practicum.playlistmaker.media.domain.api.FavoritesRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
