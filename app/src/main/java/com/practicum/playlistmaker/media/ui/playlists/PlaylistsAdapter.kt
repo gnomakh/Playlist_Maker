@@ -6,15 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.practicum.playlistmaker.databinding.PlaylistItemMediaBinding
 import com.practicum.playlistmaker.media.domain.models.Playlist
 
-class PlaylistsAdapter() : RecyclerView.Adapter<PlaylistsHolder>() {
+class PlaylistsAdapter(private val layoutId: Int) : RecyclerView.Adapter<PlaylistsHolder>() {
 
     var playlists = arrayListOf<Playlist>()
     var listener: OnPlaylistClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistsHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = PlaylistItemMediaBinding.inflate(inflater, parent, false)
-        return PlaylistsHolder(binding)
+        val view = LayoutInflater.from(parent.context).inflate(layoutId, parent, false)
+        return PlaylistsHolder(view, layoutId)
     }
 
     override fun getItemCount(): Int {

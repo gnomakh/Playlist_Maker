@@ -20,7 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlaylistsFragment : Fragment() {
     private var _binding: FragmentPlaylistsBinding? = null
     private val binding get() = _binding!!
-    private val adapter = PlaylistsAdapter()
+    private val adapter = PlaylistsAdapter(R.layout.playlist_item_media)
 
     private val viewModel: PlaylistsViewModel by viewModel()
 
@@ -35,16 +35,12 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("playlist111", "Фрагмент инициализирован")
-
         binding.rvPlaylists.layoutManager = GridLayoutManager(requireActivity(), 2)
         binding.rvPlaylists.adapter = adapter
 
         viewModel.getPlaylists()
         viewModel.getPlaylistsLiveData()?.observe(viewLifecycleOwner) {
-            Log.d("playlist111", "Данные загружены")
             setData(it)
-
         }
 
 
@@ -64,26 +60,26 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun setData(data: PlaylistsState) {
-        when(data) {
-             is PlaylistsState.Empty -> togglePlaceholders(PH_ON)
-             is PlaylistsState.Content -> {
-                 togglePlaceholders(PH_OFF)
-                 adapter.playlists = data.playlists as ArrayList<Playlist>
-             }
+        when (data) {
+            is PlaylistsState.Empty -> togglePlaceholders(PH_ON)
+            is PlaylistsState.Content -> {
+                togglePlaceholders(PH_OFF)
+                adapter.playlists = data.playlists as ArrayList<Playlist>
+            }
         }
-        Log.d("playlist111", "${adapter.playlists.size}")
         adapter.notifyDataSetChanged()
     }
 
     private fun togglePlaceholders(state: String) {
-        when(state) {
+        when (state) {
             PH_OFF -> {
                 binding.playlistImgPlaceholder.isVisible = false
                 binding.playlistsPlaceholderMessage.isVisible = false
             }
+
             PH_ON -> {
                 binding.playlistImgPlaceholder.isVisible = true
-                binding.playlistsPlaceholderMessage.isVisible = false
+                binding.playlistsPlaceholderMessage.isVisible = true
             }
         }
     }

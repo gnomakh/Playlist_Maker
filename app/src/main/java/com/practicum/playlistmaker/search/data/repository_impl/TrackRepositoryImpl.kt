@@ -38,15 +38,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient, private val 
                     isFavorite = false
                 )
             }) as ArrayList<Track>
-            val ids = db.getTrackDao().getTracksId()
-            val tracksMapped = result.map { track ->
-                track.apply {
-                    isFavorite =
-                        track.trackId in ids
-                }
-            } as ArrayList<Track>
-
-            emit(Pair(tracksMapped, null))
+            emit(Pair(result, null))
 
         } else emit(Pair(null, null))
     }

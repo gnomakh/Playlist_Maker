@@ -11,14 +11,13 @@ import kotlinx.coroutines.flow.flow
 
 class HistoryRepositoryImpl(
     private val sharedPref: SharedPreferences,
-    private val gSon: Gson,
-    private val db: AppDatabase
+    private val gSon: Gson
 ) : HistoryRepository {
 
     override suspend fun addTrackToHistory(track: Track) {
         val jsonStr = sharedPref.getString(HISTORY_KEY, null)
         val listType = object : TypeToken<ArrayList<Track>>() {}.type
-        val array = mapFavorites(Gson().fromJson<ArrayList<Track>>(jsonStr, listType) ?: arrayListOf())
+        val array = Gson().fromJson<ArrayList<Track>>(jsonStr, listType) ?: arrayListOf()
         array.removeIf { it.trackId == track.trackId }
         if (array.size > 9) array.removeLast()
         array.add(0, track)
@@ -31,22 +30,11 @@ class HistoryRepositoryImpl(
     override fun getHistory(): Flow<List<Track>> = flow {
         val jsonStr = sharedPref.getString(HISTORY_KEY, null)
         val listType = object : TypeToken<List<Track>>() {}.type
-        emit(mapFavorites(Gson().fromJson(jsonStr, listType) ?: arrayListOf()))
+        emit(Gson().fromJson(jsonStr, listType) ?: arrayListOf())
     }
 
     override fun clearHistory() {
         sharedPref.edit().clear().apply()
-    }
-
-    private suspend fun mapFavorites(tracks: ArrayList<Track>) : ArrayList<Track> {
-            val ids = db.getTrackDao().getTracksId()
-            return tracks.map {
-                track ->
-                    track.apply {
-                        isFavorite =
-                            track.trackId in ids
-                    }
-            } as ArrayList<Track>
     }
 
     companion object {

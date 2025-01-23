@@ -98,4 +98,13 @@
         <item name="android:letterSpacing">0</item>
     </style>
 
+<!--    <style name="PlaylistCreationButtonStyle">-->
+<!--        <item name="android:background">@drawable/playlist_creation_button</item>-->
+<!--        <item name="android:textSize">10sp</item>-->
+<!--        <item name="android:fontFamily">@font/ys_display_medium</item>-->
+<!--        <item name="android:textColor">@color/roundedButtonTextColor</item>-->
+<!--        <item name="android:fontWeight">500</item>-->
+<!--        <item name="android:textAllCaps">false</item>-->
+<!--    </style>-->
+
 </resources>

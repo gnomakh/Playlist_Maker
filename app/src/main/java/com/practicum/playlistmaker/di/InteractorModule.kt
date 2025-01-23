@@ -3,10 +3,11 @@ package com.practicum.playlistmaker.di
 import com.practicum.playlistmaker.media.domain.api.FavoritesInteractor
 import com.practicum.playlistmaker.media.domain.api.PlaylistsGetterUseCase
 import com.practicum.playlistmaker.media.domain.api.PlaylistsInteractor
+import com.practicum.playlistmaker.media.domain.api.RelativityInteractor
 import com.practicum.playlistmaker.media.domain.impl.FavoritesInteractorImpl
 import com.practicum.playlistmaker.media.domain.impl.PlaylistsGetterUseCaseImpl
 import com.practicum.playlistmaker.media.domain.impl.PlaylistsInteractorImpl
-import com.practicum.playlistmaker.media.ui.favList.FavoritesAdapter
+import com.practicum.playlistmaker.media.domain.impl.RelativityInteractorImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.impl.PlayerInteractorImpl
 import com.practicum.playlistmaker.search.domain.api.HistoryInteractor
@@ -44,5 +45,9 @@ val interactorModule = module {
 
     single<PlaylistsGetterUseCase> {
         PlaylistsGetterUseCaseImpl(get())
+    }
+
+    single<RelativityInteractor> {
+        RelativityInteractorImpl(get())
     }
 }

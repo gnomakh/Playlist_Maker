@@ -13,23 +13,23 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/rounded_button"
         android:text="@string/new_playlist"
-        app:layout_constraintBottom_toTopOf="@+id/playlist_img_placeholder"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/playlist_img_placeholder"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_marginTop="46dp"
+        android:layout_marginTop="106dp"
         android:layout_marginBottom="24dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toTopOf="@id/playlists_placeholder_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/new_playlist_button"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/search_placeholder" />
 
     <TextView
@@ -53,7 +53,9 @@
         android:layout_weight="1"
         android:layout_marginHorizontal="4dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/new_playlist_button"
+        android:layout_marginTop="76dp"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

@@ -21,16 +21,13 @@ class PlaylistsViewModel(private val playlistsGetter: PlaylistsGetterUseCase) : 
     }
 
     fun getPlaylists() {
-        Log.d("playlist111", "Плейлисты получаются")
         viewModelScope.launch {
             playlistsGetter.getPlaylists().collect { playlists ->
                 if(playlists.isEmpty()) {
                     playlistsLiveData.postValue(PlaylistsState.Empty)
-                    Log.d("playlist111", "Плейлистов не загружено")
                 }
                 else {
                     playlistsLiveData.postValue(PlaylistsState.Content(playlists))
-                    Log.d("playlist111", "Плейлисты есть")
                 }
             }
         }

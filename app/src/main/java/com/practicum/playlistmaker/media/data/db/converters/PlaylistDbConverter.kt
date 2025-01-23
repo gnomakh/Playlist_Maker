@@ -1,11 +1,12 @@
-package com.practicum.playlistmaker.media.data.db.playlists_db
+package com.practicum.playlistmaker.media.data.db.converters
 
-import androidx.core.net.toUri
+import com.practicum.playlistmaker.media.data.db.entities.PlaylistEntity
 import com.practicum.playlistmaker.media.domain.models.Playlist
 
 class PlaylistDbConverter {
     fun map(playlistEntity: PlaylistEntity) : Playlist {
         return Playlist(
+            id = playlistEntity.id,
             title = playlistEntity.title,
             description = playlistEntity.description,
             picture = playlistEntity.picture,
@@ -14,6 +15,13 @@ class PlaylistDbConverter {
     }
 
     fun map(playlist: Playlist) : PlaylistEntity {
+        if(playlist.id != null) return PlaylistEntity(
+            id = playlist.id,
+            title = playlist.title,
+            description = playlist.description,
+            picture = playlist.picture,
+            tracksCount = playlist.tracksCount
+        )
         return PlaylistEntity(
             title = playlist.title,
             description = playlist.description,
