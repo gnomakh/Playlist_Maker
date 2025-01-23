@@ -2,41 +2,71 @@ package com.practicum.playlistmaker.player.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
-import com.practicum.playlistmaker.root.dpToPx
+import com.practicum.playlistmaker.root.RootActivity
 import com.practicum.playlistmaker.search.domain.models.Track
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerFragment : Fragment() {
 
-    private lateinit var binding: ActivityPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding get() = _binding!!
+
+    private val gson = Gson()
+
     private val viewModel: PlayerViewModel by viewModel()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val inflater = LayoutInflater.from(this)
-        binding = ActivityPlayerBinding.inflate(inflater)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.playerToolbar.setNavigationOnClickListener {
-            finish()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-        viewModel.getTrackInfoLiveData().observe(this) {
+
+        val type = object : TypeToken<Track>() {}.type
+        val track = gson.fromJson<Track>(arguments?.getString("trackForPlayer"), type)
+
+        viewModel.initializeViewModel(track)
+
+        viewModel.getTrackInfoLiveData().observe(viewLifecycleOwner) {
             setTrackInfo(it)
+            binding.likeButton.setImageResource(
+                when (it.isFavorite) {
+                    true -> R.drawable.like_button_active
+                    false -> R.drawable.like_button_unactive
+                }
+            )
         }
 
         binding.playButton.setOnClickListener {
             viewModel.playbackControl()
         }
 
-        viewModel.getPlayerStateLiveData().observe(this) {
+        binding.likeButton.setOnClickListener {
+            viewModel.onFavoriteClick()
+        }
+
+        viewModel.getPlayerStateLiveData().observe(viewLifecycleOwner) {
             binding.playButton.setImageResource(
                 when (it) {
                     PlaybackState.PLAYING_STATE -> R.drawable.pause_button
@@ -47,14 +77,19 @@ class PlayerActivity : AppCompatActivity() {
             )
         }
 
-        viewModel.getPlaybackTimeLiveData().observe(this) {
+        viewModel.getPlaybackTimeLiveData().observe(viewLifecycleOwner) {
             renderTimer(it)
         }
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.onActivityPause()
+        viewModel.onAppPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onFragmentDestroy()
     }
 
     private fun renderTimer(currentTime: String) {
@@ -66,7 +101,7 @@ class PlayerActivity : AppCompatActivity() {
             .placeholder(
                 R.drawable.placeholder_player
             ).fitCenter()
-            .transform(RoundedCorners(this.dpToPx(8.0F))).into(binding.artworkCover)
+            .transform(RoundedCorners((8 * resources.displayMetrics.density).toInt())).into(binding.artworkCover)
         with(binding) {
             trackName.text = trackOnPlayer.trackName
             artistName.text = trackOnPlayer.artistName

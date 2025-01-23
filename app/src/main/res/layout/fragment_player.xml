@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.PlayerActivity"
+    tools:context=".player.ui.PlayerFragment"
     android:background="@color/backgroundColor">
 
     <androidx.constraintlayout.widget.Guideline
@@ -120,7 +120,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/round_button_bg"
         android:padding="14dp"
-        android:src="@drawable/like_button"
+        android:src="@drawable/like_button_unactive"
         app:layout_constraintBottom_toBottomOf="@id/play_button"
         app:layout_constraintEnd_toStartOf="@id/rightBorder"
         app:layout_constraintHorizontal_bias="1.0"
