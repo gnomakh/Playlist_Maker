@@ -1,25 +1,22 @@
-package com.practicum.playlistmaker.media.data.db
+package com.practicum.playlistmaker.media.data.db.converters
 
-import com.example.courutines.db.TrackEntity
-import com.practicum.playlistmaker.search.data.dto.TrackDto
+import com.practicum.playlistmaker.media.data.db.entities.TrackEntity
 import com.practicum.playlistmaker.search.domain.models.Track
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class TrackDbConverter {
     fun map(track: Track): TrackEntity {
         return TrackEntity(
+            track.trackId,
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
             track.artworkUrl100,
-            track.trackId,
             track.collectionName,
             track.releaseDate,
             track.primaryGenreName,
             track.country,
             track.previewUrl,
-            track.isFavorite
+            isFavorite = track.isFavorite
         )
     }
 
@@ -35,7 +32,7 @@ class TrackDbConverter {
             track.primaryGenreName,
             track.country,
             track.previewUrl,
-            track.isFavorite
+            isFavorite = track.isFavorite
         )
     }
 

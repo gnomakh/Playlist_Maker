@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface FavoritesInteractor {
     suspend fun addTrack(track: Track)
+    suspend fun isFavorite(trackId: Int) : Boolean
     suspend fun deleteTrack(track: Track)
     fun getFavorites() : Flow<List<Track>>
 

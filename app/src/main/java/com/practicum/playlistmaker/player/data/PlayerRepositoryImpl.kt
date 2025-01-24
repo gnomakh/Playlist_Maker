@@ -14,12 +14,16 @@ class PlayerRepositoryImpl(var mediaPlayer: MediaPlayer) : PlayerRepository {
         onPreparedListener: () -> Unit,
         onCompletionListener: () -> Unit
     ) {
-        if (trackUrl != "No previewUrl") {
-            mediaPlayer = mediaPlayer.apply {
-                setDataSource(trackUrl)
-                prepareAsync()
-                setOnPreparedListener { onPreparedListener() }
-                setOnCompletionListener { onCompletionListener() }
+        if (trackUrl.isNotEmpty()) {
+            try {
+                mediaPlayer = mediaPlayer.apply {
+                    setDataSource(trackUrl)
+                    prepareAsync()
+                    setOnPreparedListener { onPreparedListener() }
+                    setOnCompletionListener { onCompletionListener() }
+                }
+            } catch(e: Throwable) {
+                e.printStackTrace()
             }
         }
     }

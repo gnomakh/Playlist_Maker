@@ -4,23 +4,32 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlayerBinding
+import com.practicum.playlistmaker.media.domain.models.Playlist
+import com.practicum.playlistmaker.media.ui.playlists.PlaylistsAdapter
+import com.practicum.playlistmaker.media.ui.state.PlaylistsState
 import com.practicum.playlistmaker.player.ui.ViewModel.PlayerViewModel
 import com.practicum.playlistmaker.player.ui.state.PlaybackState
-import com.practicum.playlistmaker.root.RootActivity
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
 
     private var _binding: FragmentPlayerBinding? = null
     private val binding get() = _binding!!
+    private val adapter = PlaylistsAdapter(R.layout.playlist_item_bottomsheet)
 
     private val gson = Gson()
 
@@ -39,7 +48,11 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.playerToolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            findNavController().navigateUp()
+        }
+
+        binding.newPlaylistButtonBottomsheet.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_playlistCreationFragment)
         }
 
 
@@ -56,6 +69,12 @@ class PlayerFragment : Fragment() {
                     false -> R.drawable.like_button_unactive
                 }
             )
+        }
+
+        viewModel.getPlaylists()
+        viewModel.getPlaylistsLiveData()?.observe(viewLifecycleOwner) {
+            setData(it)
+
         }
 
         binding.playButton.setOnClickListener {
@@ -80,6 +99,61 @@ class PlayerFragment : Fragment() {
         viewModel.getPlaybackTimeLiveData().observe(viewLifecycleOwner) {
             renderTimer(it)
         }
+
+        binding.rvPlaylists.adapter = adapter
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.addToPlaylistButton.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.overlay.isVisible = false
+                    }
+
+                    else -> {
+                        binding.overlay.isVisible = true
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.overlay.alpha = (slideOffset + 1)
+            }
+        })
+
+        adapter.listener = PlaylistsAdapter.OnPlaylistClickListener { playlist ->
+
+            lifecycleScope.launch {
+                val added = viewModel.addToPlaylist(playlist)
+                when (added) {
+                    true -> {
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                        Toast.makeText(
+                            requireActivity(),
+                            "Добавлено в плейлист ${playlist.title}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    false -> Toast.makeText(
+                        requireActivity(),
+                        "Трек уже добавлен в плейлист ${playlist.title}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                adapter.notifyDataSetChanged()
+            }
+
+        }
     }
 
     override fun onPause() {
@@ -101,7 +175,8 @@ class PlayerFragment : Fragment() {
             .placeholder(
                 R.drawable.placeholder_player
             ).fitCenter()
-            .transform(RoundedCorners((8 * resources.displayMetrics.density).toInt())).into(binding.artworkCover)
+            .transform(RoundedCorners((8 * resources.displayMetrics.density).toInt()))
+            .into(binding.artworkCover)
         with(binding) {
             trackName.text = trackOnPlayer.trackName
             artistName.text = trackOnPlayer.artistName
@@ -112,5 +187,15 @@ class PlayerFragment : Fragment() {
             genrePl.text = trackOnPlayer.primaryGenreName
             countryPl.text = trackOnPlayer.country
         }
+    }
+
+    private fun setData(data: PlaylistsState) {
+        when (data) {
+            is PlaylistsState.Empty -> {}
+            is PlaylistsState.Content -> {
+                adapter.playlists = data.playlists as ArrayList<Playlist>
+            }
+        }
+        adapter.notifyDataSetChanged()
     }
 }

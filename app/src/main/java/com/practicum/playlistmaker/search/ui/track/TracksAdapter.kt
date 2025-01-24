@@ -23,7 +23,7 @@ class TracksAdapter() : RecyclerView.Adapter<TracksHolder>() {
 
     override fun onBindViewHolder(holder: TracksHolder, position: Int) {
         val track = trackList[position]
-        holder.bind(trackList[position])
+        holder.bind(track)
         holder.itemView.setOnClickListener {
             listener?.onTrackClick(track)
         }

@@ -1,25 +1,21 @@
-package com.example.courutines.db
+package com.practicum.playlistmaker.media.data.db.entities
 
-import androidx.room.ColumnInfo
-import androidx.room.ColumnInfo.Companion.TEXT
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "track_table")
+@Entity(tableName = "tracks_table")
 data class TrackEntity(
-
-    @ColumnInfo(name = "trackName", typeAffinity = TEXT)
+    @PrimaryKey
+    val trackId: Int,
     val trackName: String,
     val artistName: String,
     val trackTimeMillis: String,
     val artworkUrl100: String,
-    @PrimaryKey(autoGenerate = true)
-    val trackId: Int,
     val collectionName: String,
     val releaseDate: String,
     val primaryGenreName: String,
     val country: String,
     val previewUrl: String,
-    var isFavorite: Boolean,
+    var isFavorite: Boolean = false,
     val addedAt: Long = System.currentTimeMillis()
 )

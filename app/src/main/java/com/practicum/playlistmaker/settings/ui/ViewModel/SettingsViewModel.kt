@@ -3,23 +3,26 @@ package com.practicum.playlistmaker.settings.ui.ViewModel
 import android.app.Application
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.root.isDarkTheme
 import com.practicum.playlistmaker.settings.domain.api.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.model.IntentState
 import com.practicum.playlistmaker.util.App
 
-class SettingsViewModel(val application: Application, val settingsInteractor: SettingsInteractor) :
-    ViewModel() {
+class SettingsViewModel(private val application: Application, private val settingsInteractor: SettingsInteractor) :
+    AndroidViewModel(application) {
 
     private val intentState = MutableLiveData<Intent>()
     fun getIntentState(): LiveData<Intent> {
         return intentState
     }
 
-    fun getSwitchState(): Boolean = settingsInteractor.getDarkThemeState()
+    fun getSwitchState(): Boolean {
+        return if(settingsInteractor.getThemeStatePresence()) settingsInteractor.getDarkThemeState() else application.isDarkTheme()
+    }
 
     fun switchTheme(isChecked: Boolean) {
         settingsInteractor.getDarkThemeState()

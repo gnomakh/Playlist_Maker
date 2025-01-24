@@ -24,4 +24,6 @@
     <color name="tabTextColor">#FFFFFFFF</color>
 
     <color name="tabBackground">#1A1B22</color>
+
+    <color name = "bottomSheetDragItemColor">#FFFFFF</color>
 </resources>

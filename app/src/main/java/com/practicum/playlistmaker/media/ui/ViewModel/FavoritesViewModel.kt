@@ -19,7 +19,7 @@ class FavoritesViewModel(private val favoritesInteractor: FavoritesInteractor) :
     fun getFavoritesList() {
         viewModelScope.launch {
             favoritesInteractor.getFavorites().collect { list ->
-                if (list.isNullOrEmpty())
+                if (list.isEmpty())
                     favoritesLiveData.postValue(FavoritesState.Empty)
                 else
                     favoritesLiveData.postValue(FavoritesState.Content(list))

@@ -11,6 +11,10 @@ class FavoritesInteractorImpl(private val favoritesRepository: FavoritesReposito
         favoritesRepository.addTrack(track)
     }
 
+    override suspend fun isFavorite(trackId: Int) : Boolean {
+        return favoritesRepository.isFavorite(trackId)
+    }
+
     override suspend fun deleteTrack(track: Track) {
         favoritesRepository.deleteTrack(track)
     }
