@@ -29,13 +29,19 @@ class PlayerViewModel(
     private var isPlaying = false
 
     private val trackInfoLiveData = MutableLiveData<Track>()
-    fun getTrackInfoLiveData(): LiveData<Track> = trackInfoLiveData
+    fun getTrackInfoLiveData(): LiveData<Track> {
+        return trackInfoLiveData
+    }
 
     private val playbackTimeLiveData = MutableLiveData<String>()
-    fun getPlaybackTimeLiveData(): LiveData<String> = playbackTimeLiveData
+    fun getPlaybackTimeLiveData(): LiveData<String> {
+        return playbackTimeLiveData
+    }
 
     private var playerStateLiveData = MutableLiveData(PlaybackState.DEFAULT_STATE)
-    fun getPlayerStateLiveData(): LiveData<PlaybackState> = playerStateLiveData
+    fun getPlayerStateLiveData(): LiveData<PlaybackState> {
+        return playerStateLiveData
+    }
 
     private val playlistsLiveData = MutableLiveData<PlaylistsState>()
     fun getPlaylistsLiveData(): LiveData<PlaylistsState>? {

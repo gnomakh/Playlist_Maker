@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -115,11 +116,11 @@ class PlayerFragment : Fragment() {
 
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding.overlay.visibility = View.GONE
+                        binding.overlay.isVisible = false
                     }
 
                     else -> {
-                        binding.overlay.visibility = View.VISIBLE
+                        binding.overlay.isVisible = true
                     }
                 }
             }
