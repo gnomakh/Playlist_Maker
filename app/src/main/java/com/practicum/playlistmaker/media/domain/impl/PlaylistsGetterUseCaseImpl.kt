@@ -9,4 +9,8 @@ class PlaylistsGetterUseCaseImpl(private val playlistsRepository: PlaylistsRepos
     override suspend fun getPlaylists() : Flow<List<Playlist>> {
         return playlistsRepository.getPlaylists()
     }
+
+    override suspend fun getPlaylist(id: Int): Playlist {
+        return playlistsRepository.getPlaylist(id)
+    }
 }

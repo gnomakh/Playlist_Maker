@@ -1,7 +1,6 @@
 package com.practicum.playlistmaker.media.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +51,12 @@ class PlaylistsFragment : Fragment() {
         binding.newPlaylistButton.setOnClickListener {
             navController.navigate(R.id.action_mediaFragment_to_playlistCreationFragment)
         }
+
+        adapter.listener = PlaylistsAdapter.OnPlaylistClickListener { playlist ->
+            val bundle = Bundle()
+            bundle.putString("playlistId", playlist.id.toString())
+            navController.navigate(R.id.action_mediaFragment_to_playlistFragment, bundle)
+        }
     }
 
     override fun onDestroyView() {
@@ -73,11 +78,13 @@ class PlaylistsFragment : Fragment() {
     private fun togglePlaceholders(state: String) {
         when (state) {
             PH_OFF -> {
+                binding.rvPlaylists.isVisible = true
                 binding.playlistImgPlaceholder.isVisible = false
                 binding.playlistsPlaceholderMessage.isVisible = false
             }
 
             PH_ON -> {
+                binding.rvPlaylists.isVisible = false
                 binding.playlistImgPlaceholder.isVisible = true
                 binding.playlistsPlaceholderMessage.isVisible = true
             }

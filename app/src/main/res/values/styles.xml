@@ -171,4 +171,19 @@
         <item name="android:textColor">@color/tabTextColor</item>
     </style>
 
+    <style name="PlaylistTitleDescTextStyle">
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontWeight">400</item>
+        <item name="android:textColor">@color/staticTextColor</item>
+    </style>
+
+    <style name="PlaylistSettingsTextStyle">
+        <item name="android:textColor">@color/headingTextColor</item>
+        <item name="android:textSize">@dimen/settings_text_size</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>>
+        <item name="android:letterSpacing">0</item>
+    </style>
+
 </resources>
