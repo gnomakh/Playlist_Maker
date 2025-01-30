@@ -22,7 +22,7 @@ interface TrackDao {
     @Query("SELECT trackId FROM tracks_table where isFavorite = 1")
     suspend fun getFavoritesId(): List<Int>
 
-    @Query("SELECT * FROM tracks_table WHERE trackId IN (:ids)")
+    @Query("SELECT * FROM tracks_table WHERE trackId IN (:ids) ORDER BY addedAt DESC")
     suspend fun getPlaylistTracks(ids: List<Int>): List<TrackEntity>
 
 }
