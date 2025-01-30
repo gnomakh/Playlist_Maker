@@ -14,6 +14,7 @@ import androidx.core.bundle.Bundle
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -23,12 +24,14 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.FragmentPlaylistMakerBinding
 import com.practicum.playlistmaker.media.ui.ViewModel.PlaylistCreationViewModel
 import com.practicum.playlistmaker.root.dpToPx
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistCreationFragment : Fragment() {
     private var _binding: FragmentPlaylistMakerBinding? = null
     private val binding get() = _binding!!
     private val viewModel: PlaylistCreationViewModel by viewModel()
+    var picUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,19 +46,25 @@ class PlaylistCreationFragment : Fragment() {
 
         activity?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
+        val playlistId = arguments?.getString("playlistIdtoEdit")
+        if (!playlistId.isNullOrEmpty()) {
+            lifecycleScope.launch {
+                setToEditState(playlistId.toInt())
+            }
+        }
+
         binding.playlistMakerToolbar.setNavigationOnClickListener {
-            onBackAttempt()
+            if (playlistId != null) findNavController().navigateUp() else onBackAttempt()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    onBackAttempt()
+                    if (playlistId != null) findNavController().navigateUp() else onBackAttempt()
                 }
             })
 
-        var picUri: Uri? = null
 
         val pickMedia =
             registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -68,13 +77,10 @@ class PlaylistCreationFragment : Fragment() {
                             CenterCrop(),
                             RoundedCorners(requireActivity().dpToPx(8.0F)),
                         )
+                        .placeholder(R.drawable.placeholder_playlist)
                         .into(binding.uploadImagePicked)
 
                     picUri = uri
-                } else {
-                    // binding.uploadImagePicked.isVisible = false Убрать выбранное ранее изображение, если второй раз не выбрано ничего
-//                    Toast.makeText(requireActivity(), "Изображение не выбрано", Toast.LENGTH_SHORT)
-//                        .show()
                 }
             }
 
@@ -91,18 +97,58 @@ class PlaylistCreationFragment : Fragment() {
         )
 
         binding.buttonCreatePlaylist.setOnClickListener {
-            viewModel.createPlaylist(
-                binding.playlistTitleEdittext.text.toString(),
-                binding.playlistDescriptionEdittext.text.toString(),
-                picUri
-            )
-            Toast.makeText(
-                requireActivity(),
-                "Плейлист ${binding.playlistTitleEdittext.text.toString()} создан",
-                Toast.LENGTH_SHORT
-            ).show()
-            findNavController().navigateUp()
+            if (playlistId == null) {
+                createPlaylist(picUri)
+            } else {
+                editPlaylist(
+                    playlistId.toInt(),
+                    binding.playlistTitleEdittext.text.toString(),
+                    binding.playlistDescriptionEdittext.text.toString(),
+                    picUri
+
+                )
+            }
         }
+    }
+
+    private suspend fun setToEditState(id: Int) {
+        val playlist = viewModel.getPlaylistData(id)
+
+        binding.uploadImagePicked.isVisible = true
+
+        if (playlist.picture != null) {
+            Glide.with(requireActivity())
+                .load(playlist.picture)
+                .transform(
+                    CenterCrop(),
+                    RoundedCorners(requireActivity().dpToPx(8.0F)),
+                )
+                .into(binding.uploadImagePicked)
+        }
+        binding.playlistTitleEdittext.setText(playlist.title)
+        binding.playlistDescriptionEdittext.setText(playlist.description)
+
+        binding.playlistMakerToolbar.title = requireActivity().getString(R.string.edit_toolbar)
+        binding.buttonCreatePlaylist.text = requireActivity().getString(R.string.save_button)
+    }
+
+    private fun createPlaylist(picUri: Uri?) {
+        viewModel.createPlaylist(
+            binding.playlistTitleEdittext.text.toString(),
+            binding.playlistDescriptionEdittext.text.toString(),
+            picUri
+        )
+        Toast.makeText(
+            requireActivity(),
+            "Плейлист ${binding.playlistTitleEdittext.text.toString()} создан",
+            Toast.LENGTH_SHORT
+        ).show()
+        findNavController().navigateUp()
+    }
+
+    private fun editPlaylist(id: Int, title: String, desc: String, picture: Uri?) {
+        viewModel.updatePlaylist(id, title, desc, picture)
+        findNavController().navigateUp()
     }
 
     private fun onBackAttempt() {

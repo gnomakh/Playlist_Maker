@@ -37,6 +37,7 @@ class RootActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.playerFragment -> hideBottomNavigation()
                 R.id.playlistCreationFragment -> hideBottomNavigation()
+                R.id.playlistFragment -> hideBottomNavigation()
                 else -> showBottomNavigation()
             }
         }
@@ -66,6 +67,14 @@ fun Context.getDeclination(trackCount: Int): String {
         trackCount % 100 in 11..19 -> "треков"
         else -> "треков"
     }
+}
+
+fun Context.timeStringToMillis(timeString: String): Long {
+    val parts = timeString.split(":")
+    val minutes = parts[0].toLong()
+    val seconds = parts[1].toLong()
+
+    return (minutes * 60 + seconds) * 1000
 }
 
 fun Context.isDarkTheme(): Boolean {

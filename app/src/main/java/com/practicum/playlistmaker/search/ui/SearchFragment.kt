@@ -105,7 +105,7 @@ class SearchFragment : Fragment() {
             activity?.supportFragmentManager?.findFragmentById(R.id.container_view) as NavHostFragment
         val navController = navHostFragment.navController
 
-        adapter.listener = TracksAdapter.OnTrackClickListener { track ->
+        adapter.onClickListener = TracksAdapter.OnTrackClickListener { track ->
             if (debounceClick()) {
                 viewModel.addTrackToHistory(track)
                 if (viewModel.getScreenStateLiveData().value is SearchScreenState.History)

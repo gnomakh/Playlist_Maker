@@ -10,6 +10,8 @@ import com.practicum.playlistmaker.media.domain.api.PlaylistsRepository
 import com.practicum.playlistmaker.media.domain.api.RelativityRepository
 import com.practicum.playlistmaker.player.data.PlayerRepositoryImpl
 import com.practicum.playlistmaker.player.domain.api.PlayerRepository
+import com.practicum.playlistmaker.playlist.data.impl.PlaylistRepositoryImpl
+import com.practicum.playlistmaker.playlist.domain.api.PlaylistRepository
 import com.practicum.playlistmaker.search.data.repository_impl.HistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.repository_impl.TrackRepositoryImpl
 import com.practicum.playlistmaker.search.domain.api.HistoryRepository
@@ -51,6 +53,10 @@ val repositoryModule = module {
 
     single<RelativityRepository> {
         RelativityRepositoryImpl(get())
+    }
+
+    single<PlaylistRepository> {
+        PlaylistRepositoryImpl(get(), get())
     }
 }
 

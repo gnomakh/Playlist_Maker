@@ -22,7 +22,6 @@ class PlaylistsHolder(view: View, layoutId: Int) :
 
     fun bind(playlist: Playlist) {
 
-
         title.text = playlist.title
         trackCount.text =
             "${playlist.tracksCount} ${itemView.context.getDeclination(playlist.tracksCount)}"

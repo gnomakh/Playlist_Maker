@@ -17,11 +17,10 @@ class RelativityRepositoryImpl(
     }
 
     override suspend fun deleteConnection(track: Track, playlist: Playlist) {
-        val relativity = RelativeDbEntity(trackId = track.trackId, playlistId = playlist.id!!)
-        db.getRelativeDbDao().deleteConnection(relativity)
+        db.getRelativeDbDao().deleteConnection(track.trackId, playlist.id!!)
     }
 
-    override suspend fun getTrackIds() : Flow<List<Int>> = flow {
+    override suspend fun getTrackIds(): Flow<List<Int>> = flow {
         emit(db.getRelativeDbDao().getTrackIds())
     }
 
