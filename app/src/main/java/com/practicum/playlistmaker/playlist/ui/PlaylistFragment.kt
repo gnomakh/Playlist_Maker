@@ -156,7 +156,7 @@ class PlaylistFragment : Fragment() {
         adapter.onHoldListener = TracksAdapter.OnTrackHoldListener { track ->
             MaterialAlertDialogBuilder(requireContext()).setTitle(getString(R.string.dialog_track_delete_title))
                 .setMessage(getString(R.string.dialog_delete_track_confirmation_message))
-                .setNeutralButton(getString(R.string.dialog_neutral)) { dialog, which ->
+                .setNeutralButton(getString(R.string.dialog_confirm_cancel)) { dialog, which ->
 
                 }.setPositiveButton(getString(R.string.dialog_confirm_deletion)) { dialog, which ->
                     viewModel.deleteTrack(track)

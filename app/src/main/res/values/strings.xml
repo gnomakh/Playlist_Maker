@@ -63,8 +63,9 @@
     <string name ="tracks_duration_placeholder">0 минут</string>
 
     <string name ="dialog_track_delete_title">Удалить трек</string>
-    <string name ="dialog_delete_track_confirmation_message">Вы уверены, что хотите удалить трек из плейлиста?</string>
-    <string name ="dialog_confirm_deletion">Удалить</string>
+    <string name ="dialog_delete_track_confirmation_message">Хотите удалить трек?</string>
+    <string name ="dialog_confirm_deletion">Да</string>
+    <string name ="dialog_confirm_cancel">Нет</string>
 
     <string name ="dialog_playlist_delete_title">Удалить плейлист</string>
     <string name ="dialog_delete_playlist_confirmation_message">Хотите удалить плейлист</string>
