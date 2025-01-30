@@ -15,8 +15,8 @@ class PlaylistRepositoryImpl(
     private val trackConverter: TrackDbConverter
 ) : PlaylistRepository {
     override suspend fun getTrackList(playlist: Playlist): Flow<List<Track>> = flow {
-        val trackIds = dataBase.getRelativeDbDao().getPlaylistEntries(playlist.id!!)
-        val trackList = dataBase.getTrackDao().getPlaylistTracks(trackIds)
+//        val trackIds = dataBase.getRelativeDbDao().getPlaylistEntries(playlist.id!!)
+        val trackList = dataBase.getTrackDao().getPlaylistTracks(playlist.id!!)
         val trackListMapped = trackList.map { track ->
             trackConverter.map(track)
         }

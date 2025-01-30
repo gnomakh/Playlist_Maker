@@ -23,7 +23,7 @@ interface RelativeDbDao {
     @Query("SELECT trackId FROM relative_table")
     suspend fun getTrackIds() : List<Int>
 
-    @Query("SELECT trackId FROM relative_table WHERE playlistId = :id")
+    @Query("SELECT trackId FROM relative_table WHERE playlistId = :id ORDER BY keyId")
     suspend fun getPlaylistEntries(id: Int) : List<Int>
 
     @Query("SELECT COUNT(*) FROM relative_table WHERE trackId = :trackId")
